@@ -180,15 +180,15 @@ button{font:inherit;color:inherit}
 .case--night:hover .case-plus,.case--night:focus-visible .case-plus{background:var(--gold);border-color:var(--gold);color:var(--ink)}
 .case--mist{background:var(--mist);border-color:var(--mist)}
 .case--newdoor{grid-column:span 3;grid-row:span 2}
-.case--wix,.case--mayfair,.case--nufit,.case--next{grid-column:span 3}
-.case--spiderbug,.case--khyzr,.case--belan{grid-column:span 2}
+.case--wix,.case--mayfair{grid-column:span 3}
+.case--spiderbug,.case--khyzr,.case--belan,.case--nufit,.case--habibi,.case--next{grid-column:span 2}
 .case--next{cursor:default;background:var(--night);border-color:var(--night);color:var(--on-night)}
 .case--next .case-title{color:#FBF7EC}
 .case--next p{max-width:34ch;color:var(--on-night-muted);font-size:.98rem}
 @media (max-width:980px){
   .bento{grid-template-columns:repeat(2,minmax(0,1fr))}
   .bento > .case{grid-column:span 1;grid-row:auto}
-  .bento > .case--newdoor,.bento > .case--next{grid-column:span 2}
+  .bento > .case--newdoor{grid-column:span 2}
 }
 @media (max-width:620px){
   .case{min-height:200px}
@@ -389,7 +389,7 @@ details[open] .faq-ic{transform:rotate(45deg);background:var(--gold);border-colo
           <span class="svc-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".9" fill="currentColor"/></svg></span>
           <h3>Offer and positioning</h3>
           <p>We sharpen what you sell and who it's for, so the right buyers see you as the authority.</p>
-          <p class="svc-for">For New Door Investments and The Nu Fit Ummah</p>
+          <p class="svc-for">For New Door Investments, The Nu Fit Ummah and Habibi NY</p>
         </li>
         <li class="svc">
           <span class="svc-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 10v4a1 1 0 0 0 1 1h2l5 4V5L7 9H5a1 1 0 0 0-1 1z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M18.6 6.4a7.6 7.6 0 0 1 0 11.2"/></svg></span>
@@ -401,7 +401,7 @@ details[open] .faq-ic{transform:rotate(45deg);background:var(--gold);border-colo
           <span class="svc-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="6.5" width="13" height="11" rx="2.2"/><path d="M16 10.5l5-3v9l-5-3"/></svg></span>
           <h3>Content system</h3>
           <p>A curated content plan, filmed and edited for you, made to turn viewers into buyers.</p>
-          <p class="svc-for">For The Nu Fit Ummah and Mayfair Garden</p>
+          <p class="svc-for">For The Nu Fit Ummah, Mayfair Garden and Habibi NY</p>
         </li>
         <li class="svc">
           <span class="svc-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h16l-6 7.5V19l-4-2v-4.5z"/></svg></span>
@@ -493,6 +493,11 @@ details[open] .faq-ic{transform:rotate(45deg);background:var(--gold);border-colo
           <span class="case-logo"><img src="assets/logos/nufit.webp" alt="The Nu Fit Ummah" style="height:56px;max-height:56px"></span>
           <span class="case-plus" aria-hidden="true"><svg class="ic"><use href="#i-plus"/></svg></span>
           <span class="case-title">Offer repositioned. Content planned, filmed and edited.</span>
+        </button>
+        <button class="case case--habibi" type="button" data-case="habibi" aria-haspopup="dialog">
+          <span class="case-logo"><img src="assets/logos/habibi.svg" alt="Habibi NY" style="height:30px"></span>
+          <span class="case-plus" aria-hidden="true"><svg class="ic"><use href="#i-plus"/></svg></span>
+          <span class="case-title">Events, UGC and TikTok lives for a luxury fragrance brand.</span>
         </button>
         <div class="case case--next">
           <span class="case-title">Your brand is next.</span>
@@ -746,6 +751,23 @@ details[open] .faq-ic{transform:rotate(45deg);background:var(--gold);border-colo
       <li>Ran the full content and offer strategy</li>
     </ul>
     <div class="dlg-cta"><p>Want your content and offer done for you?</p><a class="btn btn-gold" href="https://calendar.app.google/tUtMJa1PZaKr5hzX6" target="_blank" rel="noopener">Book a call</a></div>
+  </div>
+</dialog>
+
+<dialog class="case-dlg" id="case-habibi" aria-labelledby="d-habibi">
+  <div class="dlg-in">
+    <div class="dlg-top"><span class="case-logo"><img src="assets/logos/habibi.svg" alt="" style="height:36px"></span><button class="dlg-x" type="button" data-close aria-label="Close"><svg class="ic"><use href="#i-x"/></svg></button></div>
+    <h3 id="d-habibi">Habibi NY</h3>
+    <p class="dlg-meta">Luxury oud fragrances, handcrafted in America. <a href="https://habibiny.com" target="_blank" rel="noopener">habibiny.com</a></p>
+    <h4>What we did</h4>
+    <ul class="dlg-list">
+      <li>Planned and ran their events</li>
+      <li>Ran UGC campaigns</li>
+      <li>Curated their content</li>
+      <li>Ran TikTok lives</li>
+      <li>Built their brand strategy</li>
+    </ul>
+    <div class="dlg-cta"><p>Want your brand in front of more buyers?</p><a class="btn btn-gold" href="https://calendar.app.google/tUtMJa1PZaKr5hzX6" target="_blank" rel="noopener">Book a call</a></div>
   </div>
 </dialog>
 
