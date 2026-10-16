@@ -4,301 +4,44 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>scalD | Everything we touch, we scale.</title>
-<meta name="description" content="scalD scales growth agencies and consulting firms with ads, funnels, content and a sales team, built and run with you.">
+<meta name="description" content="scalD builds the whole revenue machine for growth agencies, consulting firms and coaches: positioning, content, funnel, CRM, and the setters and closers who turn leads into cash.">
 <meta property="og:title" content="scalD | Everything we touch, we scale.">
-<meta property="og:description" content="Ads, funnels, content and a sales team for growth agencies and consulting firms. We build the machine and run it with you.">
+<meta property="og:description" content="We started in sales, not marketing. We build the whole revenue machine, and you own it.">
 <meta name="theme-color" content="#07070C">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2307070C'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-family='Didot,Georgia,serif' font-weight='700' font-size='32' fill='%23C9A84C'%3EsD%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Crimson+Pro:wght@300..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
 <script>document.documentElement.classList.add('js')</script>
-<style>
-:root{
-  --night:#07070C; --panel:#0C0C13;
-  --gold:#C9A84C; --gold-hi:#E8CB7A; --gold-line:rgba(201,168,76,.22);
-  --cream:#F5EFE1; --soft:#CFC8B8; --mute:#A39E93; --line:rgba(245,239,225,.1);
-  --serif:"Instrument Serif","ITC Garamond Condensed","Garamond Condensed",Georgia,serif;
-  --text:"Crimson Pro","EB Garamond",Garamond,Georgia,serif;
-  --gx:clamp(20px,4vw,56px);
-  --ease:cubic-bezier(.16,1,.3,1);
-}
-html.lenis,html.lenis body{height:auto}
-.lenis.lenis-stopped{overflow:clip}
-*,*::before,*::after{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--night);color:var(--cream);font:400 1.16rem/1.6 var(--text);letter-spacing:.003em;font-synthesis:none;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
-img,svg{display:block;max-width:100%}
-h1,h2,h3,p,ul,ol{margin:0}
-ul,ol{padding:0;list-style:none}
-a{color:inherit}
-button{font:inherit;color:inherit}
-::selection{background:rgba(201,168,76,.35)}
-:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:8px}
-.wrap{max-width:1240px;margin:0 auto;padding:0 var(--gx)}
-.skip{position:fixed;left:12px;top:-60px;z-index:100;padding:10px 16px;border-radius:10px;background:var(--gold);color:#17130B;font-weight:500;text-decoration:none}
-.skip:focus{top:12px}
-.ic{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-
-/* Instrument Serif ships in one weight; a hairline stroke gives it the Book weight of print-era Garamond Condensed */
-.brand-word,.hero-h1,.cap h2,.hud strong,.lg-closed,.dir-head h2,.bstat strong,.fl-name,.coin-b strong,.closed h2,.finale h2,.foot-word{-webkit-text-stroke:.012em currentColor}
-
-/* the small description text is set in lowercase; the wordmark keeps its capital D */
-.hero-sub,.hero-hint,.cap-step,.cap p,.hud span,.dir-head p,.bstat span,.fl-what,.fd-meta,.fd-list,.closed-from,.closed-body,.closed-act span,.finale p,.foot-copy{text-transform:lowercase}
-.foot-copy .nc{text-transform:none}
-
-/* masked line reveal, shared by every heading that animates in */
-.ln{display:block;overflow:hidden;padding-bottom:.1em;margin-bottom:-.1em}
-.ln > span{display:block}
-
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5em;height:52px;padding:0 28px;border-radius:999px;border:1px solid transparent;font:500 1.06rem/1 var(--text);letter-spacing:.015em;text-decoration:none;white-space:nowrap;cursor:pointer;transition:background-color .3s,border-color .3s,transform .3s var(--ease)}
-.btn:active{transform:scale(.97)}
-.btn-gold{background:var(--gold);color:#17130B}
-.btn-gold:hover{background:var(--gold-hi)}
-
-/* nav */
-.nav{position:fixed;inset:0 0 auto;z-index:60;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px;padding:18px var(--gx);background-color:rgba(7,7,12,0);transition:background-color .5s ease,box-shadow .5s ease}
-.nav.is-solid{background-color:rgba(7,7,12,.9);box-shadow:0 1px 0 var(--line)}
-.nav-l{display:flex;gap:30px;font:400 1.04rem/1 var(--text);letter-spacing:.01em}
-.nav-l a,.nav-r a{text-decoration:none;opacity:.78;transition:opacity .25s}
-.nav-l a:hover,.nav-r a:hover{opacity:1}
-.nav-r{justify-self:end;font:400 1.04rem/1 var(--text);letter-spacing:.01em}
-.brand{justify-self:center;display:flex;flex-direction:column;align-items:center;text-decoration:none;line-height:1}
-.brand-word{font:400 2.3rem/.8 var(--serif);letter-spacing:0}
-.brand-say{margin-top:6px;font:400 .82rem/1 var(--text);letter-spacing:.03em;opacity:.62}
-@media (max-width:760px){
-  .nav{grid-template-columns:1fr}
-  .nav-l,.nav-r{display:none}
-  .brand{justify-self:start;align-items:flex-start}
-}
-
-/* the scene */
-.scene{position:relative;height:100vh}
-.js .scene{height:600vh}
-.stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:#050507;contain:strict}
-#city{position:absolute;inset:0;width:100%;height:100%}
-/* the sky lives in the DOM: two gradients the GPU slides and crossfades, so the canvas never paints it */
-.sky{position:absolute;inset:0;overflow:hidden;transform-origin:50% 50%;will-change:transform}
-.sky-l,.sky-glow{position:absolute;top:0;will-change:transform}
-.sky-l{left:-10%;width:120%;height:315vh}
-.sky-dusk{background:linear-gradient(to bottom,rgb(18,24,56) 0%,rgb(18,24,56) 63.5%,rgb(64,48,84) 85.4%,rgb(214,136,74) 100%)}
-.sky-night{opacity:0;background:linear-gradient(to bottom,rgb(3,4,10) 0%,rgb(3,4,10) 63.5%,rgb(10,11,28) 85.4%,rgb(62,42,26) 100%)}
-.sky-glow{border-radius:50%;opacity:0;background:radial-gradient(closest-side,rgb(240,170,90),rgba(240,170,90,0))}
-.js #city,.js .sky{opacity:0;transition:opacity 1.6s ease .1s}
-.go #city,.go .sky{opacity:1}
-.room{position:absolute;inset:0;z-index:1;pointer-events:none;transform-origin:50% 50%;will-change:transform,opacity}
-.room svg{position:absolute;inset:0;width:100%;height:100%}
-.scrim{position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(90deg,rgba(5,5,10,.7) 0%,rgba(5,5,10,.32) 40%,rgba(5,5,10,0) 64%);opacity:0;transition:opacity .9s ease}
-.stage.dim .scrim{opacity:1}
-.scene-mark{position:absolute;left:0;width:1px;height:1px;pointer-events:none}
-
-.hero{position:absolute;inset:0;z-index:3;pointer-events:none}
-.hero-h1{font:400 clamp(3.6rem,9.2vw,9.6rem)/.9 var(--serif);letter-spacing:-.01em;color:var(--cream)}
-.hl{position:absolute;display:block;overflow:hidden;padding:.02em .04em .14em;will-change:transform}
-.hl-in{display:block}
-.hl-a{left:var(--gx);top:14vh}
-.hl-b{left:var(--gx);top:calc(14vh + .9em)}
-.hl-c{right:var(--gx);bottom:15vh}
-.hero-sub{position:absolute;left:var(--gx);bottom:6vh;max-width:24rem;font-size:1.14rem;line-height:1.5;color:var(--soft)}
-.hero-hint{position:absolute;right:var(--gx);bottom:6vh;display:flex;align-items:center;gap:12px;font:400 .96rem/1 var(--text);letter-spacing:.03em;color:var(--mute)}
-.hint-line{width:44px;height:1px;background:currentColor;transform-origin:left;animation:hint 2.8s var(--ease) infinite}
-@keyframes hint{0%{transform:scaleX(0);opacity:1}55%{transform:scaleX(1);opacity:1}100%{transform:scaleX(1);opacity:0}}
-.js .hl-in{transform:translateY(112%)}
-.go .hl-in{transform:none;transition:transform 1.5s var(--ease) .2s}
-.go .hl-b .hl-in{transition-delay:.32s}
-.go .hl-c .hl-in{transition-delay:.5s}
-.js .hero-sub,.js .hero-hint{opacity:0;transform:translateY(10px)}
-.go .hero-sub,.go .hero-hint{opacity:1;transform:none;transition:opacity 1.1s ease .85s,transform 1.3s var(--ease) .85s}
-@media (max-width:760px){
-  .hero-h1{font-size:clamp(3.2rem,15vw,5.2rem)}
-  .hl-a{top:13vh}
-  .hl-c{bottom:23vh}
-  .hero-sub{bottom:12vh;right:var(--gx);max-width:none;font-size:1.08rem}
-  .hero-hint{display:none}
-}
-
-/* captions: lines slide up through a mask, no filters */
-.caps{position:absolute;inset:0;z-index:3;pointer-events:none}
-.cap{position:absolute;left:var(--gx);bottom:15vh;max-width:38rem;visibility:hidden;transition:visibility 0s linear 1s}
-.cap.on{visibility:visible;transition-delay:0s}
-/* hand-off: the outgoing line leaves fast, the incoming one rises after it has cleared */
-.cap .ln > span{transform:translateY(108%);transition:transform .48s cubic-bezier(.55,0,.8,.2)}
-.cap.on .ln > span{transform:none;transition:transform 1.1s var(--ease) .34s}
-.cap.past .ln > span{transform:translateY(-108%)}
-.cap-step,.cap p{opacity:0;transform:translateY(14px);transition:opacity .28s ease,transform .48s cubic-bezier(.55,0,.8,.2)}
-.cap.on .cap-step{opacity:1;transform:none;transition:opacity .8s ease .3s,transform 1.1s var(--ease) .3s}
-.cap.on p{opacity:1;transform:none;transition:opacity .8s ease .46s,transform 1.1s var(--ease) .46s}
-.cap.past .cap-step,.cap.past p{transform:translateY(-12px)}
-.cap-step{display:block;margin-bottom:16px;font:500 .98rem/1 var(--text);letter-spacing:.05em;color:var(--gold-hi)}
-.cap h2{font:400 clamp(2.9rem,6.4vw,6.2rem)/.96 var(--serif);letter-spacing:-.005em;color:var(--cream)}
-.cap p{max-width:29rem;margin-top:18px;font-size:clamp(1.14rem,1.45vw,1.3rem);color:var(--soft)}
-.cap-final{left:50%;bottom:10vh;width:min(44rem,calc(100% - 2 * var(--gx)));transform:translateX(-50%);text-align:center}
-.cap-final p{margin-left:auto;margin-right:auto}
-.cap-final .btn{margin-top:28px;pointer-events:auto;opacity:0;transform:translateY(16px);transition:opacity .7s ease .3s,transform 1s var(--ease) .3s,background-color .3s}
-.cap-final.on .btn{opacity:1;transform:none}
-.hud{position:absolute;right:var(--gx);bottom:15vh;z-index:3;display:flex;gap:44px;text-align:right;opacity:0;transform:translateY(12px);visibility:hidden;transition:opacity .7s ease,transform .9s var(--ease),visibility 0s linear .9s}
-.hud.on{opacity:1;transform:none;visibility:visible;transition-delay:0s}
-.hud strong{display:block;font:400 clamp(2.3rem,3.6vw,3.3rem)/1 var(--serif);letter-spacing:0;font-variant-numeric:lining-nums tabular-nums;color:var(--gold-hi)}
-.hud span{display:block;margin-top:8px;font-size:.96rem;letter-spacing:.02em;color:var(--mute)}
-@media (max-width:760px){
-  .cap{bottom:17vh;right:var(--gx)}
-  .hud{left:var(--gx);right:auto;top:96px;bottom:auto;gap:28px;text-align:left}
-}
-
-/* the floating booking button */
-.dock{position:fixed;left:50%;bottom:22px;z-index:70;display:flex;align-items:center;gap:6px;text-decoration:none;transform:translateX(-50%);transition:opacity .5s ease,transform .7s var(--ease)}
-.dock.hide{opacity:0;transform:translate(-50%,24px);pointer-events:none}
-.dock-label{display:inline-flex;align-items:center;height:50px;padding:0 26px;border-radius:999px;background:var(--gold);color:#17130B;font:500 1.06rem/1 var(--text);letter-spacing:.015em;box-shadow:0 10px 30px rgba(0,0,0,.3);transition:background-color .3s}
-.dock-ic{display:grid;place-items:center;width:50px;height:50px;border-radius:50%;background:var(--gold);color:#17130B;box-shadow:0 10px 30px rgba(0,0,0,.3);transition:transform .6s var(--ease),background-color .3s}
-.dock:hover .dock-label,.dock:hover .dock-ic{background:var(--gold-hi)}
-.dock:hover .dock-ic{transform:rotate(45deg)}
-
-/* after the view */
-.after{position:relative;z-index:5;background:var(--night)}
-.after::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:30vh;pointer-events:none;background:linear-gradient(to bottom,rgba(7,7,12,0),var(--night))}
-
-/* logo roll */
-.roll{display:flex;align-items:center;gap:20px;padding:30px 0 10px}
-.roll-mask{position:relative;flex:1;min-width:0;overflow:hidden}
-.roll-mask::before,.roll-mask::after{content:"";position:absolute;top:0;bottom:0;z-index:1;width:12%;pointer-events:none}
-.roll-mask::before{left:0;background:linear-gradient(90deg,var(--night),rgba(7,7,12,0))}
-.roll-mask::after{right:0;background:linear-gradient(270deg,var(--night),rgba(7,7,12,0))}
-.track{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:28px clamp(52px,6vw,92px)}
-.track.rolling{flex-wrap:nowrap;justify-content:flex-start;width:max-content;padding-right:clamp(52px,6vw,92px);animation:roll 52s linear infinite;will-change:transform}
-@keyframes roll{to{transform:translate3d(-50%,0,0)}}
-@media (hover:hover){.roll-mask:hover .track{animation-play-state:paused}}
-.track.paused,.track.sleep{animation-play-state:paused}
-.lg{display:flex;align-items:center;gap:10px;white-space:nowrap;opacity:.66;transition:opacity .3s}
-.lg:hover{opacity:1}
-.lg img{width:auto;max-width:none}
-.lg-name{font:500 1.15rem/1 var(--text);letter-spacing:.01em;color:var(--cream)}
-.lg-closed{font:400 1.15rem/1 var(--serif);letter-spacing:.2em;color:var(--gold-hi)}
-.pp{display:none}
-.js .pp{display:inline-grid;place-items:center;flex:none;width:44px;height:44px;margin-right:var(--gx);border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--cream);cursor:pointer;transition:border-color .25s,background-color .25s}
-.pp:hover{border-color:rgba(245,239,225,.35);background:rgba(245,239,225,.05)}
-.pp svg{width:16px;height:16px;fill:currentColor}
-
-/* section reveal */
-.js .rv .ln > span{transform:translateY(108%)}
-.rv.in .ln > span{transform:none;transition:transform 1.2s var(--ease)}
-.js .rv .rv-f{opacity:0;transform:translateY(14px)}
-.rv.in .rv-f{opacity:1;transform:none;transition:opacity 1s ease .2s,transform 1.2s var(--ease) .2s}
-
-/* building directory */
-.dir{padding:clamp(72px,11vh,130px) 0 clamp(64px,9vh,110px)}
-.dir-head{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);align-items:end;gap:20px 56px;margin-bottom:38px}
-.dir-head h2{font:400 clamp(2.9rem,6vw,5.6rem)/.95 var(--serif);letter-spacing:-.005em}
-.dir-head p{max-width:30rem;color:var(--mute)}
-.board{overflow:hidden;border:1px solid var(--gold-line);border-radius:24px;background:linear-gradient(180deg,#0E0E16,#09090E);box-shadow:0 40px 100px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.04)}
-.board-top{display:flex;flex-wrap:wrap;gap:18px 72px;padding:28px 30px;border-bottom:1px solid var(--gold-line)}
-.bstat strong{display:block;font:400 clamp(2.5rem,3.8vw,3.4rem)/1 var(--serif);letter-spacing:0;font-variant-numeric:lining-nums;color:var(--gold-hi)}
-.bstat span{display:block;max-width:24ch;margin-top:8px;font-size:1rem;line-height:1.4;letter-spacing:.01em;color:var(--mute)}
-.floor{border-bottom:1px solid var(--line)}
-.floor:last-child{border-bottom:0}
-.floor-row{position:relative;display:grid;grid-template-columns:140px minmax(0,1fr) minmax(0,1.3fr) minmax(140px,auto) 36px;align-items:center;gap:20px;width:100%;padding:21px 30px;border:0;background:none;text-align:left;cursor:pointer}
-.floor-row::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 55% 160% at 10% 50%,rgba(201,168,76,.14),transparent 70%);opacity:0;transition:opacity .6s ease}
-.floor-row:hover::before,.floor-row[aria-expanded="true"]::before{opacity:1}
-.fl-logo{display:flex;align-items:center;gap:8px;height:42px}
-.fl-logo img{width:auto;max-width:140px;object-fit:contain;opacity:.82;transition:opacity .3s}
-.floor-row:hover .fl-logo img{opacity:1}
-.fl-name{font:400 clamp(1.4rem,2vw,1.7rem)/1.15 var(--serif);letter-spacing:0}
-.fl-what{font-size:1.06rem;color:var(--mute)}
-.fl-res{font:600 1.1rem/1.3 var(--text);letter-spacing:.005em;color:var(--gold-hi)}
-.fl-ic{display:grid;place-items:center;width:34px;height:34px;border:1px solid rgba(245,239,225,.22);border-radius:50%;transition:transform .55s var(--ease),background-color .3s,border-color .3s,color .3s}
-.floor-row[aria-expanded="true"] .fl-ic{transform:rotate(45deg);background:var(--gold);border-color:var(--gold);color:#17130B}
-.floor-detail{display:grid;grid-template-rows:0fr;transition:grid-template-rows .65s var(--ease)}
-.floor.open .floor-detail{grid-template-rows:1fr}
-.fd-in{overflow:hidden}
-.fd{display:grid;grid-template-columns:140px minmax(0,1fr) minmax(0,1.3fr) minmax(140px,auto) 36px;gap:20px;padding:0 30px 28px}
-.fd-meta{grid-column:2;color:var(--mute)}
-.fd-meta a{color:var(--gold-hi);text-underline-offset:3px}
-.fd-list{grid-column:3 / span 2}
-.fd-list li{position:relative;padding:7px 0 7px 22px;color:var(--soft)}
-.fd-list li::before{content:"";position:absolute;left:2px;top:18px;width:6px;height:6px;border-radius:50%;background:var(--gold)}
-.js .floor{opacity:0;transform:translateY(16px)}
-.board.in .floor{opacity:1;transform:none;transition:opacity .9s ease,transform 1.1s var(--ease);transition-delay:calc(var(--i) * 65ms)}
-@media (max-width:900px){
-  .dir-head{grid-template-columns:1fr}
-  .floor-row{grid-template-columns:minmax(0,1fr) 34px;grid-template-areas:"logo ic" "name name" "what what" "res res";gap:6px 16px;padding:20px}
-  .fl-logo{grid-area:logo;height:40px;margin-bottom:6px}
-  .fl-logo img{max-width:130px}
-  .fl-name{grid-area:name}
-  .fl-what{grid-area:what}
-  .fl-res{grid-area:res}
-  .fl-ic{grid-area:ic}
-  .fd{grid-template-columns:minmax(0,1fr);gap:12px;padding:0 20px 22px}
-  .fd-meta,.fd-list{grid-column:1}
-}
-
-/* closed */
-.closed{padding:0 0 clamp(72px,10vh,120px)}
-.closed-card{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:clamp(28px,5vw,64px);padding:clamp(26px,4vw,50px);border:1px solid var(--gold-line);border-radius:24px;background:radial-gradient(ellipse 45% 100% at 0% 50%,rgba(201,168,76,.13),transparent 72%),var(--panel)}
-.coin{width:clamp(140px,17vw,220px);aspect-ratio:1;perspective:900px}
-.coin-in{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform 1.2s var(--ease)}
-.closed-card:hover .coin-in,.closed-card:focus-within .coin-in{transform:rotateY(180deg)}
-.coin-f,.coin-b{position:absolute;inset:0;border-radius:50%;-webkit-backface-visibility:hidden;backface-visibility:hidden}
-.coin-f img{width:100%;height:100%;border-radius:50%;box-shadow:0 0 0 2px rgba(201,168,76,.45),0 24px 60px rgba(0,0,0,.6),0 0 90px rgba(201,168,76,.16)}
-.coin-b{display:grid;place-content:center;text-align:center;color:#2A1F08;transform:rotateY(180deg);background:radial-gradient(circle at 34% 28%,#F8EBC0 0%,#C9A84C 34%,#7A5A1A 82%);box-shadow:0 0 0 2px rgba(201,168,76,.45),0 24px 60px rgba(0,0,0,.6)}
-.coin-b strong{font:400 clamp(3.4rem,6.8vw,5.4rem)/.85 var(--serif)}
-.coin-b span{margin-top:8px;font:500 1.06rem/1 var(--text);letter-spacing:.06em}
-.closed-from{margin-bottom:14px;font:500 1rem/1 var(--text);letter-spacing:.04em;color:var(--gold-hi)}
-.closed h2{font:400 clamp(2.3rem,4.4vw,3.8rem)/1 var(--serif);letter-spacing:-.005em;text-wrap:balance}
-.closed-body{max-width:40rem;margin-top:16px;color:var(--soft)}
-.closed-act{display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px;margin-top:26px}
-.closed-act span{font-size:1rem;color:var(--mute)}
-@media (max-width:760px){.closed-card{grid-template-columns:1fr}}
-
-/* finale */
-.finale{position:relative;display:grid;align-items:center;min-height:92vh;overflow:hidden;padding:110px 0 32vh}
-#skyline{position:absolute;left:0;right:0;bottom:0;width:100%;height:56%}
-.finale .wrap{position:relative;z-index:2;text-align:center}
-.finale h2{font:400 clamp(3.6rem,10vw,10rem)/.92 var(--serif);letter-spacing:-.01em;color:#FBF7EC}
-.finale p{max-width:34rem;margin:26px auto 0;font-size:1.22rem;color:var(--soft);text-shadow:0 2px 18px rgba(7,7,12,.9)}
-.finale .btn{margin-top:34px}
-.foot{position:relative;z-index:2;padding:38px 0 42px;border-top:1px solid var(--line);background:var(--night)}
-.foot-in{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px}
-.foot-word{font:400 clamp(3.4rem,7vw,5.4rem)/.8 var(--serif);letter-spacing:0;color:var(--gold)}
-.foot-say{margin-top:12px;font-size:1rem;letter-spacing:.02em;color:var(--mute)}
-.foot-links{display:flex;flex-wrap:wrap;gap:8px 30px;font-size:1.04rem;letter-spacing:.01em}
-.foot-links a{text-decoration:none;color:var(--soft);transition:color .25s}
-.foot-links a:hover{color:var(--gold-hi)}
-.foot-copy{width:100%;padding-top:20px;border-top:1px solid var(--line);font-size:.96rem;color:var(--mute)}
-
-@media (prefers-reduced-motion:reduce){
-  .js #city,.js .hl-in,.js .hero-sub,.js .hero-hint,.js .floor,.js .rv .ln > span,.js .rv .rv-f{opacity:1;transform:none;transition:none}
-  .hint-line,.track.rolling{animation:none}
-  .cap .ln > span,.cap-step,.cap p,.cap-final .btn,.hud,.dock,.coin-in,.floor-detail,.scrim{transition-duration:.01ms!important;transition-delay:0s!important}
-}
-</style>
+<script src="assets/site.js" defer></script>
+<script src="assets/city.js" defer></script>
 </head>
 <body>
-<a class="skip" href="#clients">Skip to the clients</a>
+<a class="skip" href="#proof">Skip to the proof</a>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="0 0 36 44"><rect x="0" y="0" width="4.2" height="44"/><rect x="6.4" y="0" width="17.38" height="3.2"/><rect x="6.4" y="5.83" width="24.7" height="3.2"/><rect x="6.4" y="11.66" width="27.99" height="3.2"/><rect x="6.4" y="17.49" width="29.43" height="3.2"/><rect x="6.4" y="23.31" width="29.43" height="3.2"/><rect x="6.4" y="29.14" width="27.99" height="3.2"/><rect x="6.4" y="34.97" width="24.7" height="3.2"/><rect x="6.4" y="40.8" width="17.38" height="3.2"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
   <symbol id="i-out" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></symbol>
 </svg>
 
 <header class="nav" id="nav">
   <nav class="nav-l" aria-label="Main">
-    <a href="#how">How we scale</a>
-    <a href="#clients">Clients</a>
-    <a href="#closed">Closed</a>
+    <a href="#proof">Proof</a>
+    <a href="#method">Method</a>
+    <a href="about.html">About</a>
   </nav>
   <a class="brand" href="#top" aria-label="scalD, back to top">
-    <span class="brand-word">scalD</span>
+    <span class="wm" aria-hidden="true">scal<svg class="wm-d" viewBox="0 0 36 44"><use href="#mark"/></svg></span>
     <span class="brand-say">pronounced (skayld)</span>
   </a>
-  <div class="nav-r"><a href="https://calendar.app.google/tUtMJa1PZaKr5hzX6" target="_blank" rel="noopener">Book a call</a></div>
+  <div class="nav-r"><a class="btn btn-gold btn-call btn-xs" href="https://calendar.app.google/tUtMJa1PZaKr5hzX6" target="_blank" rel="noopener"><span class="btn-t">Book a call</span><span class="btn-i" aria-hidden="true"><svg class="ic"><use href="#i-out"/></svg></span></a></div>
 </header>
 
-<a class="dock" id="dock" href="https://calendar.app.google/tUtMJa1PZaKr5hzX6" target="_blank" rel="noopener">
-  <span class="dock-label">Book a call</span>
-  <span class="dock-ic" aria-hidden="true"><svg class="ic"><use href="#i-out"/></svg></span>
-</a>
+<a class="dock" id="dock" href="https://calendar.app.google/tUtMJa1PZaKr5hzX6" target="_blank" rel="noopener"><span class="btn btn-gold btn-call btn-lg"><span class="btn-t">Book a call</span><span class="btn-i" aria-hidden="true"><svg class="ic"><use href="#i-out"/></svg></span></span></a>
 
-<section class="scene" id="top" aria-label="The view">
-  <span class="scene-mark" id="how" style="top:84vh"></span>
+<section class="scene" id="top" aria-label="Introduction">
   <div class="stage" id="stage">
     <div class="sky" id="sky" aria-hidden="true">
       <div class="sky-l sky-dusk" id="sky-dusk"></div>
@@ -315,49 +58,36 @@ button{font:inherit;color:inherit}
         <span class="hl hl-b"><span class="hl-in">we touch,</span></span>
         <span class="hl hl-c"><span class="hl-in">we scale.</span></span>
       </h1>
-      <p class="hero-sub">We scale growth agencies and consulting firms. Ads, funnels, content and a sales team, built and run with you.</p>
+      <div class="hero-foot">
+        <p class="hero-sub">We build the whole revenue machine for growth agencies, consulting firms and coaches, from the first view to the closed deal. You own it.</p>
+        <div class="hero-cta">
+          <a class="btn btn-gold btn-call btn-sm" href="https://calendar.app.google/tUtMJa1PZaKr5hzX6" target="_blank" rel="noopener"><span class="btn-t">Book a call</span><span class="btn-i" aria-hidden="true"><svg class="ic"><use href="#i-out"/></svg></span></a>
+          <a class="tlink" href="#proof">See the proof</a>
+        </div>
+      </div>
       <p class="hero-hint" aria-hidden="true"><span class="hint-line"></span>Scroll to look outside</p>
     </div>
 
-    <div class="caps">
-      <div class="cap" data-a=".15" data-b=".3">
-        <span class="cap-step">Step 1 of 4</span>
-        <h2><span class="ln"><span>Lay the foundation.</span></span></h2>
-        <p>We reposition your offer and build the backend: funnel, CRM and automations.</p>
-      </div>
-      <div class="cap" data-a=".3" data-b=".45">
-        <span class="cap-step">Step 2 of 4</span>
-        <h2><span class="ln"><span>Bring in demand.</span></span></h2>
-        <p>Meta ads, a content system and outbound outreach that put buyers on your calendar.</p>
-      </div>
-      <div class="cap" data-a=".45" data-b=".6">
-        <span class="cap-step">Step 3 of 4</span>
-        <h2><span class="ln"><span>Staff every floor.</span></span></h2>
-        <p>We place, train and manage the setters and closers who turn leads into revenue.</p>
-      </div>
-      <div class="cap" data-a=".6" data-b=".76">
-        <span class="cap-step">Step 4 of 4</span>
-        <h2><span class="ln"><span>Keep building up.</span></span></h2>
-        <p>We run it with you every week, so the growth compounds instead of stalling.</p>
-      </div>
-      <div class="cap cap-final" data-a=".88" data-b="9">
-        <h2><span class="ln"><span>Next stop, the moon.</span></span></h2>
-        <p>Built for growth agencies and consulting firms that are ready to scale.</p>
-        <a class="btn btn-gold" href="https://calendar.app.google/tUtMJa1PZaKr5hzX6" target="_blank" rel="noopener" tabindex="-1">Book a call</a>
-      </div>
-    </div>
-
-    <div class="hud" id="hud" aria-hidden="true">
-      <div><strong id="hud-rev">$0</strong><span>revenue moved</span></div>
-      <div><strong id="hud-brands">0</strong><span>brands scaled</span></div>
-    </div>
+    <p class="scene-line" id="scene-line"><span class="ln"><span>We build you a revenue</span></span> <span class="ln"><span>asset you can run forever.</span></span></p>
   </div>
 </section>
 
 <main class="after" id="main">
 
-  <section aria-label="Brands we've worked with">
-    <div class="roll">
+  <section class="proof" id="proof" aria-labelledby="proof-t">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <h2 id="proof-t"><span class="ln"><span>The proof.</span></span></h2>
+        <p class="rv-f">Nine brands, B2B and B2C. Here's what the machine has moved so far.</p>
+      </div>
+      <div class="stats">
+        <div class="stat"><span class="stat-n" data-count="1.5" data-dec="1" data-pre="$" data-suf="M">$1.5M</span><span class="stat-l">revenue moved for B2B and B2C companies</span></div>
+        <div class="stat"><span class="stat-n" data-count="9">9</span><span class="stat-l">brands scaled</span></div>
+        <div class="stat"><span class="stat-n" data-count="300" data-pre="+" data-suf="%">+300%</span><span class="stat-l">conversions for New Door Investments</span></div>
+        <div class="stat"><span class="stat-n" data-count="200" data-pre="$" data-suf="K">$200K</span><span class="stat-l">collected for Wix in under 4 months</span></div>
+      </div>
+    </div>
+    <div class="roll" aria-label="Brands we've worked with">
       <div class="roll-mask">
         <ul class="track" id="track">
           <li class="lg"><img src="assets/logos/light/newdoor.webp" alt="New Door Investments" style="height:48px"></li>
@@ -377,15 +107,11 @@ button{font:inherit;color:inherit}
 
   <section class="dir" id="clients" aria-labelledby="dir-t">
     <div class="wrap">
-      <div class="dir-head rv">
+      <div class="sec-head rv">
         <h2 id="dir-t"><span class="ln"><span>Who's in the building.</span></span></h2>
         <p class="rv-f">The brands we've built and run growth for. Open any floor to see what we did.</p>
       </div>
-      <div class="board" id="board">
-        <div class="board-top">
-          <div class="bstat"><strong>9</strong><span>brands scaled</span></div>
-          <div class="bstat"><strong>$1.5M</strong><span>revenue moved for B2B and B2C companies</span></div>
-        </div>
+      <div class="board">
         <ul>
           <li class="floor" style="--i:0">
             <button class="floor-row" type="button" aria-expanded="false" aria-controls="f-newdoor">
@@ -534,6 +260,81 @@ button{font:inherit;color:inherit}
     </div>
   </section>
 
+  <section class="method" id="method" aria-labelledby="method-t">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <h2 id="method-t"><span class="ln"><span>Five floors. One machine.</span></span></h2>
+        <p class="rv-f">Every client gets the same build, in the same order, because each floor carries the one above it.</p>
+      </div>
+      <div class="method-grid">
+        <div class="tw rv" id="tower" aria-hidden="true">
+          <div class="tw-crown" style="--d:5"><svg viewBox="0 0 36 44"><use href="#mark"/></svg></div>
+          <div class="tw-fl" data-f="5" style="--d:4;width:82%"><span class="tw-n">05</span></div>
+          <div class="tw-fl" data-f="4" style="--d:3;width:88%"><span class="tw-n">04</span></div>
+          <div class="tw-fl" data-f="3" style="--d:2;width:94%"><span class="tw-n">03</span></div>
+          <div class="tw-fl" data-f="2" style="--d:1"><span class="tw-n">02</span></div>
+          <div class="tw-fl" data-f="1" style="--d:0"><span class="tw-n">01</span></div>
+          <div class="tw-base"></div>
+        </div>
+        <ol class="fsteps">
+          <li class="fstep" data-f="1"><span class="fs-n" aria-hidden="true">01</span><div class="fs-body">
+            <h3>Foundation <span class="fs-sub">offer and positioning</span></h3>
+            <p class="fs-d">We sharpen who you sell to, what you promise and why it's you, at a price that closes. Everything above sits on this.</p></div></li>
+          <li class="fstep" data-f="2"><span class="fs-n" aria-hidden="true">02</span><div class="fs-body">
+            <h3>Attention <span class="fs-sub">content, Meta ads and outreach</span></h3>
+            <p class="fs-d">A curated content plan, filmed and edited for you, plus ads and outbound that bring in the right people, not just views.</p></div></li>
+          <li class="fstep" data-f="3"><span class="fs-n" aria-hidden="true">03</span><div class="fs-body">
+            <h3>Conversion <span class="fs-sub">funnel and booking</span></h3>
+            <p class="fs-d">Landing pages, lead magnets and qualification that put buyers on your calendar and keep tire-kickers off it.</p></div></li>
+          <li class="fstep" data-f="4"><span class="fs-n" aria-hidden="true">04</span><div class="fs-body">
+            <h3>Wiring <span class="fs-sub">CRM and automations</span></h3>
+            <p class="fs-d">Every lead tagged, followed up and tracked, so nothing leaks between the click and the call.</p></div></li>
+          <li class="fstep" data-f="5"><span class="fs-n" aria-hidden="true">05</span><div class="fs-body">
+            <h3>The floor team <span class="fs-sub">setters and closers</span></h3>
+            <p class="fs-d">We hire, train and manage the people who turn booked calls into cash. This is the floor most agencies never build.</p></div></li>
+        </ol>
+      </div>
+      <div class="keys rv">
+        <div>
+          <h3><span class="ln"><span>Then you get the keys.</span></span></h3>
+          <p class="rv-f">We keep running it with you: weekly numbers, fixes, and new floors as you grow. It's your asset, built to keep producing.</p>
+        </div>
+        <div class="rv-f"><a class="btn btn-gold btn-call" href="https://calendar.app.google/tUtMJa1PZaKr5hzX6" target="_blank" rel="noopener"><span class="btn-t">Book a call</span><span class="btn-i" aria-hidden="true"><svg class="ic"><use href="#i-out"/></svg></span></a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="why" id="why" aria-labelledby="why-t">
+    <div class="wrap why-grid">
+      <figure class="why-photo">
+        <img src="assets/founders.webp" alt="Ismail Ali and Nizal Dawood, the co-founders of scalD" loading="lazy" width="900" height="1600">
+        <figcaption>Ismail Ali and Nizal Dawood, co-founders</figcaption>
+      </figure>
+      <div class="why-copy rv">
+        <h2 id="why-t"><span class="ln"><span>We started in sales,</span></span> <span class="ln"><span>not marketing.</span></span></h2>
+        <p class="rv-f">Most agencies sell you one piece of the machine: content, ads or a funnel. That brings more people to your business, straight into a sales process that's already leaking. Slow follow-up, no qualification, nobody on the phones. The leads go cold, and you pay for attention that never turns into revenue.</p>
+        <div class="cmp rv-f">
+          <div>
+            <div class="tw" aria-hidden="true"><div class="tw-fl"></div><div class="tw-base"></div></div>
+            <span class="cmp-t">One floor</span>
+            <span class="cmp-l">What most agencies build</span>
+          </div>
+          <div>
+            <div class="tw lit" aria-hidden="true">
+              <div class="tw-crown"><svg viewBox="0 0 36 44"><use href="#mark"/></svg></div>
+              <div class="tw-fl" style="width:82%"></div><div class="tw-fl" style="width:88%"></div><div class="tw-fl" style="width:94%"></div><div class="tw-fl"></div><div class="tw-fl"></div>
+              <div class="tw-base"></div>
+            </div>
+            <span class="cmp-t">The whole building</span>
+            <span class="cmp-l">What we build, plus the people who close</span>
+          </div>
+        </div>
+        <p class="rv-f">We learned that knocking doors in the Texas heat, running our own sales teams, scaling companies through organic, through paid, and everything in between. Learning marketing while being a sales master is the biggest leverage we have in the industry. So we build the whole machine, from the first view to the closed deal, and staff it with people who sell. You own it, and it keeps running.</p>
+        <a class="tlink rv-f" href="about.html">Read our story</a>
+      </div>
+    </div>
+  </section>
+
   <section class="closed" id="closed" aria-labelledby="closed-t">
     <div class="wrap">
       <div class="closed-card rv">
@@ -556,603 +357,30 @@ button{font:inherit;color:inherit}
     </div>
   </section>
 
-  <section class="finale" id="book" aria-labelledby="fin-t">
+  <section class="finale" id="book" aria-labelledby="fin-t" data-nodock>
     <canvas id="skyline" aria-hidden="true"></canvas>
     <div class="wrap rv">
       <h2 id="fin-t"><span class="ln"><span>Let's build yours.</span></span></h2>
       <p class="rv-f">One call. We'll look at your offer, your content and your numbers, and show you exactly what we'd build first.</p>
-      <a class="btn btn-gold rv-f" href="https://calendar.app.google/tUtMJa1PZaKr5hzX6" target="_blank" rel="noopener">Book a call</a>
+      <div class="rv-f"><a class="btn btn-gold btn-call" href="https://calendar.app.google/tUtMJa1PZaKr5hzX6" target="_blank" rel="noopener"><span class="btn-t">Book a call</span><span class="btn-i" aria-hidden="true"><svg class="ic"><use href="#i-out"/></svg></span></a></div>
     </div>
   </section>
 
-  <footer class="foot" id="foot">
+  <footer class="foot" data-nodock>
     <div class="wrap foot-in">
       <div>
-        <div class="foot-word">scalD</div>
+        <span class="wm" aria-label="scalD">scal<svg class="wm-d" viewBox="0 0 36 44" aria-hidden="true"><use href="#mark"/></svg></span>
         <p class="foot-say">pronounced (skayld)</p>
       </div>
       <nav class="foot-links" aria-label="Footer">
-        <a href="#how">How we scale</a>
-        <a href="#clients">Clients</a>
-        <a href="#closed">Closed</a>
+        <a href="#proof">Proof</a>
+        <a href="#method">Method</a>
+        <a href="about.html">About</a>
         <a href="https://calendar.app.google/tUtMJa1PZaKr5hzX6" target="_blank" rel="noopener">Book a call</a>
       </nav>
       <p class="foot-copy">© 2026 <span class="nc">scalD</span> LLC. Everything we touch, we scale.</p>
     </div>
   </footer>
 </main>
-
-<script>
-(function () {
-  'use strict';
-  var root = document.documentElement;
-  var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var touch = matchMedia('(hover: none) and (pointer: coarse)').matches;
-  var $ = function (s, c) { return (c || document).querySelector(s); };
-  var $$ = function (s, c) { return [].slice.call((c || document).querySelectorAll(s)); };
-  var clamp = function (v, a, b) { return Math.min(b, Math.max(a, v)); };
-  var lerp = function (a, b, t) { return a + (b - a) * t; };
-  var seg = function (p, a, b) { return clamp((p - a) / (b - a), 0, 1); };
-  var out3 = function (t) { return 1 - Math.pow(1 - t, 3); };
-  var inOut = function (t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
-  function rng(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
-  function mix(a, b, t) { return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]; }
-  function rgba(c, al) { return 'rgba(' + (c[0] | 0) + ',' + (c[1] | 0) + ',' + (c[2] | 0) + ',' + (al == null ? 1 : al) + ')'; }
-
-  /* ================= the city: a procedural skyline that grows ================= */
-  var SKY = {
-    duskTop: [18, 24, 56], duskMid: [64, 48, 84], duskHor: [214, 136, 74],
-    nightTop: [3, 4, 10], nightMid: [10, 11, 28], nightHor: [62, 42, 26],
-    near: [9, 10, 17], far: [44, 40, 58], haze: [80, 58, 56]
-  };
-  var WARM = ['#F6CF7A', '#EDB65A', '#FFE3A3', '#F2C25E', '#FFD98C', '#E9A84A', '#FFF0C8', '#F9C66B'];
-  var ROOFS = ['flat', 'flat', 'spire', 'step', 'antenna', 'slant'];
-
-  /* every window of a layer, painted once into an offscreen sheet at the canvas's pixel density.
-     Each frame copies the bottom slice of a building straight out of the sheet: a plain 1:1 blit,
-     so a growing tower costs the same as a short one. */
-  function atlas(L, W, dpr, rnd) {
-    var minX = -W * .12, maxH = 0;
-    L.b.forEach(function (b) { if (b.hf > maxH) maxH = b.hf; });
-    var aw = Math.ceil(W * 1.26 * dpr), ah = Math.ceil((maxH + 4) * dpr);
-    var c = document.createElement('canvas'); c.width = aw; c.height = ah;
-    var x = c.getContext('2d');
-    var cw = L.cw * dpr, ch = L.ch * dpr;
-    var ww = Math.max(1, Math.round(cw * .56)), wh = Math.max(1, Math.round(ch * .48));
-    L.b.forEach(function (b) {
-      var fx = Math.round((b.x - minX) * dpr), fw = Math.floor(b.w * (1 - b.side) * dpr) - 1;
-      var cols = Math.floor(fw / cw), rows = Math.floor((b.hf * dpr - ch * .5) / ch);
-      for (var r = 0; r < rows; r++) {
-        var wy = ah - Math.round(ch * .5 + (r + 1) * ch - ch * .26);
-        for (var q = 0; q < cols; q++) {
-          var wx = fx + Math.round(q * cw + cw * .22);
-          if (rnd() < .6) { x.globalAlpha = .6 + rnd() * .4; x.fillStyle = WARM[(rnd() * WARM.length) | 0]; }
-          else { x.globalAlpha = 1; x.fillStyle = 'rgba(150,170,215,.14)'; }
-          x.fillRect(wx, wy, ww, wh);
-        }
-      }
-    });
-    return { c: c, minX: minX, ah: ah };
-  }
-
-  function build(W, H, seed) {
-    var rnd = rng(seed);
-    var unit = W < 760 ? clamp(H / 900, .55, 1) : clamp(Math.min(W / 1280, H / 820), .55, 1.6);
-    var cap = H * .5;
-    var layers = [0, .24, .48, .74, 1].map(function (d) {
-      var s = (.34 + .86 * d) * unit;
-      var cw = Math.max(3, Math.round(3 + 4 * s)), ch = Math.max(4, Math.round(4 + 5.4 * s));
-      var bs = [], x = -W * .1, wide = d < .3 ? 2.2 : 1;
-      while (x < W * 1.1) {
-        var w = (14 + rnd() * 24) * s * wide; if (rnd() < .14) w *= 1.7;
-        w = Math.max(cw * 2, Math.round(w / cw) * cw);
-        var cx = (x + w / 2) / W, r = rnd(), hf;
-        if (r < .4) hf = (14 + rnd() * 30) * s;
-        else if (r < .78) hf = (56 + rnd() * 110) * s;
-        else hf = (140 + rnd() * 220) * s;
-        if (d < .9) hf *= 1 + .85 * Math.exp(-Math.pow(cx - .5, 2) / .05) * (1 - d * .5);
-        else hf *= .5;
-        hf = Math.min(hf, cap);
-        var h0 = Math.min(hf, (8 + rnd() * 18) * s), grows = hf - h0 > 8 * s;
-        bs.push({
-          x: x, w: w, h0: h0, hf: hf, grows: grows,
-          t0: grows ? Math.min(.72, rnd() * .42 + Math.min(1, hf / (380 * s)) * .32) : 0,
-          dur: .12 + rnd() * .18, roof: ROOFS[(rnd() * ROOFS.length) | 0],
-          crane: grows && hf > 64 * s && rnd() < .5, side: .14 + rnd() * .12,
-          town: .2 + rnd() * .55, litD: rnd() * .08,
-          ox: ((rnd() * 7) | 0) * cw, oy: ((rnd() * 9) | 0) * ch, seed: rnd() * 100,
-          edge: hf > 150 * s && rnd() < .45
-        });
-        x += w + (rnd() < .3 ? rnd() * 12 * s : rnd() * 2 * s);
-      }
-      var cars = [];
-      if (d > .4) for (var i = 0, n = Math.round(W / 40 * s); i < n; i++) cars.push({ o: rnd() * W * 1.3, v: (16 + rnd() * 38) * s, dir: rnd() < .5 ? 1 : -1, lane: rnd() });
-      return { d: d, s: s, cw: cw, ch: ch, b: bs, cars: cars, pat: null };
-    });
-    var L = layers[2], s2 = L.s, tw = Math.max(L.cw * 6, Math.round(56 * s2 / L.cw) * L.cw);
-    var tower = { x: W * .5 - tw / 2, w: tw, h0: 16 * s2, hf: H * .46, grows: true, t0: .5, dur: .3, roof: 'crown', crane: true, side: .2, town: .3, litD: 0, ox: 0, oy: 0, seed: 7, edge: true, hero: true };
-    L.b = L.b.filter(function (b) { return b.x + b.w < tower.x - 3 || b.x > tower.x + tower.w + 3; });
-    L.b.push(tower);
-    var stars = [], clouds = [];
-    for (var i = 0; i < 200; i++) stars.push({ x: rnd(), y: rnd(), r: rnd() < .9 ? .6 + rnd() * .7 : 1.3 + rnd(), ph: rnd() * 6.28 });
-    for (i = 0; i < 7; i++) clouds.push({ x: rnd(), y: .18 + rnd() * .3, w: .18 + rnd() * .3, h: .012 + rnd() * .02 });
-    return { layers: layers, stars: stars, clouds: clouds, towerTop: null, moon: null };
-  }
-
-  /* a canvas with a pixel budget: sharp where it's cheap, softer where it isn't, never janky */
-  /* the moon is painted once into two small sprites and only scaled after that */
-  function moonSprites(R) {
-    var d = document.createElement('canvas'), n = Math.max(64, Math.ceil(R * 2));
-    d.width = d.height = n;
-    var x = d.getContext('2d'), r = n / 2;
-    var dg = x.createRadialGradient(r * .65, r * .65, r * .1, r, r, r);
-    dg.addColorStop(0, '#FFF6D8'); dg.addColorStop(.55, '#EACB78'); dg.addColorStop(1, '#B98E3C');
-    x.fillStyle = dg; x.beginPath(); x.arc(r, r, r - .5, 0, 6.2832); x.fill();
-    x.fillStyle = 'rgba(150,110,45,.2)';
-    [[.25, -.2, .22], [-.3, .15, .28], [.12, .36, .16], [-.06, -.42, .12], [.42, .18, .1]].forEach(function (m) {
-      x.beginPath(); x.arc(r + m[0] * r, r + m[1] * r, m[2] * r, 0, 6.2832); x.fill();
-    });
-    var g = document.createElement('canvas'); g.width = g.height = 128;
-    var y = g.getContext('2d'), gg = y.createRadialGradient(64, 64, 64 / 3.4 * .8, 64, 64, 64);
-    gg.addColorStop(0, 'rgba(240,206,120,.3)'); gg.addColorStop(1, 'rgba(240,206,120,0)');
-    y.fillStyle = gg; y.fillRect(0, 0, 128, 128);
-    return { disc: d, glow: g };
-  }
-
-  function City(cv, opts) {
-    this.cv = cv; this.ctx = cv.getContext('2d'); this.o = opts;
-    this.W = 0; this.H = 0; this.dpr = 0; this.D = null; this.q = 1; this.ema = null; this.fema = null; this.n = 0;
-  }
-  City.prototype.size = function () {
-    var W = Math.max(1, this.cv.clientWidth), H = Math.max(1, this.cv.clientHeight);
-    var dpr = clamp(Math.min(window.devicePixelRatio || 1, 2, Math.sqrt(this.o.budget * this.q / (W * H))), .6, 2);
-    var fresh = false;
-    if (!this.D || W !== this.W || H !== this.H) { this.W = W; this.H = H; this.D = build(W, H, this.o.seed); fresh = true; }
-    if (fresh || Math.abs(dpr - this.dpr) > .01) {
-      this.dpr = dpr;
-      this.cv.width = Math.round(W * dpr); this.cv.height = Math.round(H * dpr);
-      var seed = this.o.seed;
-      this.D.layers.forEach(function (L, i) { L.atlas = atlas(L, W, dpr, rng(seed * 31 + i * 7)); });
-      if (!this.o.clearSky) this.sprites = moonSprites(Math.min(W, H) * .16 * dpr);
-      return true;
-    }
-    return false;
-  };
-  /* if a machine can't keep up, lower the resolution instead of dropping frames */
-  City.prototype.track = function (drawMs, frameMs) {
-    this.ema = this.ema == null ? drawMs : this.ema * .9 + drawMs * .1;
-    if (frameMs > 0 && frameMs < 120) this.fema = this.fema == null ? frameMs : this.fema * .9 + frameMs * .1;
-    if (++this.n < 60) return;
-    if ((this.ema > 7.5 || (this.fema && this.fema > 21)) && this.q > .35) {
-      this.q *= .72; this.n = 0; this.ema = this.fema = null; this.size();
-    }
-  };
-
-  City.prototype.draw = function (st) {
-    var ctx = this.ctx, W = this.W, H = this.H, D = this.D;
-    if (!D) return;
-    var g = st.g, night = st.night, tilt = st.tilt, t = st.t;
-    ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
-    ctx.clearRect(0, 0, W, H);
-    var shift = g * H * .04 + tilt * H * 1.25;
-    var hy = H * st.horizon + shift;
-    if (st.zoom !== 1) { ctx.translate(W / 2, H * .5); ctx.scale(st.zoom, st.zoom); ctx.translate(-W / 2, -H * .5); }
-    var hor = mix(SKY.duskHor, SKY.nightHor, night);
-
-    if (!this.o.clearSky) {
-      ctx.imageSmoothingEnabled = true;
-      var ca = (1 - night) * .5;
-      if (ca > .01) {
-        ctx.fillStyle = 'rgba(255,196,150,.09)'; ctx.globalAlpha = ca;
-        for (var c = 0; c < D.clouds.length; c++) {
-          var cl = D.clouds[c];
-          ctx.beginPath(); ctx.ellipse(cl.x * W, hy - H * .6 + cl.y * H * .55 - shift * .5, cl.w * W, cl.h * H, 0, 0, 6.2832); ctx.fill();
-        }
-        ctx.globalAlpha = 1;
-      }
-      var sa = clamp(night * 1.3 - .4, 0, 1) * .8 + tilt * .2;
-      if (sa > .01) {
-        ctx.fillStyle = '#FFF6DE';
-        for (var i = 0; i < D.stars.length; i++) {
-          var s = D.stars[i], y = s.y * H * 1.2 - H * .2 + shift * .22;
-          if (y > hy - 24 || y < -4) continue;
-          ctx.globalAlpha = sa * (.55 + .45 * Math.sin(t * 1.6 + s.ph));
-          ctx.fillRect(s.x * W, y, s.r, s.r);
-        }
-        ctx.globalAlpha = 1;
-      }
-      this.moon(ctx, W, H, st);
-    }
-    ctx.imageSmoothingEnabled = st.zoom !== 1;
-    if (hy < H) { ctx.fillStyle = '#06060B'; ctx.fillRect(0, hy, W, H - hy + 2); }
-
-    for (var li = 0; li < D.layers.length; li++) {
-      var L = D.layers[li], d = L.d;
-      var base = Math.round((hy + 5 + d * d * H * .3 + d * tilt * H * .3) * this.dpr) / this.dpr;
-      if (base - H * .55 > H) continue;
-      if (li === 2 && hy - H * .4 < H) {
-        /* haze between the far and near city: flat tints, cheaper than a gradient */
-        ctx.fillStyle = rgba(mix(hor, SKY.haze, .5));
-        for (var hb = 0; hb < 6; hb++) { ctx.globalAlpha = .035 * (hb + 1); ctx.fillRect(0, hy - H * .4 + hb * H * .4 / 6, W, H * .4 / 6 + (hb === 5 ? 8 : .5)); }
-        ctx.globalAlpha = 1;
-      }
-      var px = -st.mx * 12 * d;
-      var body = mix(SKY.near, mix(SKY.far, hor, .25), (1 - d) * .7);
-      var bodyC = rgba(body), sideC = rgba(mix(body, [0, 0, 0], .38));
-      for (var bi = 0; bi < L.b.length; bi++) this.building(ctx, L, L.b[bi], base, px, g, night, t, bodyC, sideC);
-      if (L.cars.length && base < H + 4) this.cars(ctx, L, base, px, t, night, W);
-    }
-    if (st.trail > 0 && st.trailFade > .01) { ctx.globalAlpha = st.trailFade; this.trail(ctx, st.trail); ctx.globalAlpha = 1; }
-    if (this.o.clearSky) {
-      ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
-      ctx.globalCompositeOperation = 'destination-in';
-      var fade = ctx.createLinearGradient(0, 0, 0, H * .45);
-      fade.addColorStop(0, 'rgba(0,0,0,0)'); fade.addColorStop(1, 'rgba(0,0,0,1)');
-      ctx.fillStyle = fade; ctx.fillRect(0, 0, W, H);
-      ctx.globalCompositeOperation = 'source-over';
-    }
-  };
-
-  City.prototype.building = function (ctx, L, b, base, px, g, night, t, bodyC, sideC) {
-    var s = L.s, D = this.D, W = this.W, H = this.H, dpr = this.dpr;
-    var x = Math.round((b.x + px) * dpr) / dpr;
-    if (x > W + 40 || x + b.w < -40) return;
-    var k = b.grows ? clamp((g - b.t0) / b.dur, 0, 1) : 1;
-    var h = b.h0 + (b.hf - b.h0) * out3(k);
-    var top = base - h, rising = b.grows && k > 0 && k < 1;
-    if (top - 80 * s > H) return;
-    var skel = rising ? Math.min(h * .16, 30 * s) : 0, bt = top + skel, bh = Math.min(base, H + 2) - bt + 2;
-    ctx.fillStyle = bodyC; ctx.fillRect(x, bt, b.w, bh);
-    ctx.fillStyle = sideC; ctx.fillRect(x + b.w * (1 - b.side), bt, b.w * b.side, bh);
-
-    /* windows hang from the base, so new floors appear as the building rises */
-    var A = L.atlas, sh = Math.round((base - bt) * dpr);
-    if (A && sh > 1) {
-      var lit;
-      if (!b.grows) lit = clamp(b.town + g * .6, 0, 1);
-      else if (k <= 0) lit = b.town;
-      else lit = clamp((g - b.t0 - b.dur * .7 - b.litD) / .08, 0, 1);
-      lit *= .5 + .5 * night;
-      if (b.hero && k >= 1) lit = 1;
-      var sx = Math.round((b.x - A.minX) * dpr), sw = Math.floor(b.w * (1 - b.side) * dpr);
-      sh = Math.min(sh, A.ah);
-      ctx.globalAlpha = .15 + .85 * lit;
-      ctx.drawImage(A.c, sx, A.ah - sh, sw, sh, x, base - sh / dpr, sw / dpr, sh / dpr);
-      ctx.globalAlpha = 1;
-    }
-
-    if (skel > 0) {
-      ctx.strokeStyle = 'rgba(222,186,104,.55)'; ctx.lineWidth = Math.max(.6, .7 * s);
-      ctx.beginPath();
-      for (var vx = x; vx <= x + b.w + .1; vx += L.cw * 2) { ctx.moveTo(vx + .5, top); ctx.lineTo(vx + .5, bt); }
-      for (var vy = bt; vy >= top - .1; vy -= L.ch) { ctx.moveTo(x, vy + .5); ctx.lineTo(x + b.w, vy + .5); }
-      ctx.stroke();
-    }
-
-    if (b.crane && rising) {
-      var ca = Math.min(1, k / .05, (1 - k) / .05);
-      var mx = x + b.w * .64, my = top - 44 * s, a = Math.sin(t * .32 + b.seed) * 1.1, jl = 70 * s, jx = Math.cos(a) * jl;
-      var hx = mx + jx * .72, hk = my + 18 * s + Math.sin(t * .7 + b.seed) * 5 * s;
-      ctx.globalAlpha = ca; ctx.strokeStyle = 'rgba(230,196,112,.9)'; ctx.lineWidth = Math.max(.8, 1.1 * s);
-      ctx.beginPath();
-      ctx.moveTo(mx, top); ctx.lineTo(mx, my - 10 * s);
-      ctx.moveTo(mx - jx * .32, my); ctx.lineTo(mx + jx, my);
-      ctx.moveTo(mx, my - 10 * s); ctx.lineTo(mx + jx * .62, my);
-      ctx.moveTo(mx, my - 10 * s); ctx.lineTo(mx - jx * .3, my);
-      ctx.moveTo(hx, my); ctx.lineTo(hx, hk);
-      ctx.stroke();
-      ctx.fillStyle = 'rgba(230,196,112,.95)'; ctx.fillRect(hx - 2 * s, hk, 4 * s, 3 * s);
-      if (Math.sin(t * 3 + b.seed) > .25) { ctx.fillStyle = '#FF6A4D'; ctx.fillRect(mx + jx - 1.2, my - 1.2, 2.6, 2.6); }
-      ctx.globalAlpha = 1;
-      if (b.hero) D.towerTop = { x: mx, y: my - 10 * s };
-    }
-
-    if (!rising && k >= 1) {
-      var cxr = x + b.w / 2;
-      ctx.fillStyle = bodyC;
-      if (b.roof === 'step') { ctx.fillRect(x + b.w * .16, top - 10 * s, b.w * .68, 10 * s); ctx.fillRect(x + b.w * .33, top - 17 * s, b.w * .34, 7 * s); }
-      else if (b.roof === 'slant') { ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x + b.w, top - Math.min(b.w * .4, 30 * s)); ctx.lineTo(x + b.w, top); ctx.fill(); }
-      else if (b.roof === 'flat') ctx.fillRect(x + b.w * .2, top - 4 * s, b.w * .26, 4 * s);
-      if (b.roof === 'spire' || b.roof === 'antenna') {
-        var tip = b.roof === 'spire' ? 26 * s : 22 * s, ax = b.roof === 'spire' ? cxr : x + b.w * .7;
-        ctx.strokeStyle = '#1C1C2A'; ctx.lineWidth = Math.max(.8, s);
-        ctx.beginPath(); ctx.moveTo(ax, top); ctx.lineTo(ax, top - tip);
-        if (b.roof === 'antenna') { ctx.moveTo(x + b.w * .3, top); ctx.lineTo(x + b.w * .3, top - 14 * s); }
-        ctx.stroke();
-        if (Math.sin(t * 2.2 + b.seed) > 0) { ctx.fillStyle = 'rgba(255,92,71,.95)'; ctx.fillRect(ax - 1.3, top - tip - 1.3, 2.6, 2.6); }
-      }
-      if (b.edge) {
-        var ew = Math.max(1, .8 * s), eh = Math.min(base, H + 2) - top;
-        ctx.fillStyle = 'rgba(242,200,110,' + (.22 + .38 * night).toFixed(3) + ')';
-        ctx.fillRect(x, top, ew, eh); ctx.fillRect(x + b.w - ew, top, ew, eh);
-      }
-      if (b.hero) {
-        var cy = top - 18 * s, sp = top - 70 * s;
-        ctx.fillStyle = bodyC;
-        ctx.fillRect(x + b.w * .12, top - 12 * s, b.w * .76, 12 * s);
-        ctx.fillRect(x + b.w * .3, top - 22 * s, b.w * .4, 10 * s);
-        ctx.fillStyle = 'rgba(242,206,120,.85)';
-        ctx.fillRect(x + b.w * .12, top - 12 * s, b.w * .76, Math.max(1, s));
-        ctx.fillRect(x + b.w * .3, top - 22 * s, b.w * .4, Math.max(1, s));
-        ctx.strokeStyle = 'rgba(242,206,120,.9)'; ctx.lineWidth = Math.max(1, 1.2 * s);
-        ctx.beginPath(); ctx.moveTo(cxr, top - 22 * s); ctx.lineTo(cxr, sp); ctx.stroke();
-        var pulse = .6 + .4 * Math.sin(t * 2.4);
-        var bg = ctx.createRadialGradient(cxr, sp, 0, cxr, sp, 34 * s);
-        bg.addColorStop(0, 'rgba(255,224,150,' + (.9 * pulse).toFixed(3) + ')'); bg.addColorStop(1, 'rgba(255,224,150,0)');
-        ctx.fillStyle = bg; ctx.fillRect(cxr - 34 * s, sp - 34 * s, 68 * s, 68 * s);
-        var cg = ctx.createRadialGradient(cxr, cy, 0, cxr, cy, b.w * 1.4);
-        cg.addColorStop(0, 'rgba(242,200,110,' + (.3 * night).toFixed(3) + ')'); cg.addColorStop(1, 'rgba(242,200,110,0)');
-        ctx.fillStyle = cg; ctx.fillRect(cxr - b.w * 1.4, cy - b.w * 1.4, b.w * 2.8, b.w * 2.8);
-        D.towerTop = { x: cxr, y: sp };
-      }
-    } else if (b.hero && !rising) {
-      D.towerTop = { x: x + b.w / 2, y: top };
-    }
-  };
-
-  City.prototype.cars = function (ctx, L, base, px, t, night, W) {
-    var s = L.s, span = W * 1.3, a = .35 + .55 * night;
-    var cw = Math.max(1.3, 1.8 * s), chh = Math.max(1, 1.1 * s), len = 10 * s;
-    for (var pass = 0; pass < 2; pass++) {
-      ctx.fillStyle = pass ? '#FF5A47' : '#FFE9B8';
-      for (var i = 0; i < L.cars.length; i++) {
-        var c = L.cars[i];
-        if ((c.dir < 0) !== !!pass) continue;
-        var xx = ((c.o + t * c.v * c.dir) % span + span) % span - W * .15 + px;
-        var y = base - 1.4 * s - c.lane * 1.8 * s;
-        ctx.globalAlpha = a; ctx.fillRect(xx, y, cw, chh);
-        ctx.globalAlpha = a * .32; ctx.fillRect(c.dir > 0 ? xx - len : xx + cw, y, len, chh);
-      }
-    }
-    ctx.globalAlpha = 1;
-  };
-
-  City.prototype.moon = function (ctx, W, H, st) {
-    var m = Math.min(W, H), tl = inOut(st.tilt);
-    var x = lerp(lerp(W * .6, W * .76, st.g), W * .5, tl) - st.mx * 4;
-    var y = lerp(lerp(H * .3, H * .17, st.g), H * .36, tl);
-    var r = lerp(lerp(m * .03, m * .036, st.g), m * .16, tl), a = .75 + .25 * st.night, S = this.sprites;
-    ctx.globalAlpha = a;
-    ctx.drawImage(S.glow, x - r * 2.8, y - r * 2.8, r * 5.6, r * 5.6);
-    ctx.drawImage(S.disc, x - r, y - r, r * 2, r * 2);
-    ctx.globalAlpha = 1;
-    this.D.moon = { x: x, y: y, r: r };
-  };
-
-  City.prototype.trail = function (ctx, f) {
-    var D = this.D;
-    if (!D.towerTop || !D.moon) return;
-    var ax = D.towerTop.x, ay = D.towerTop.y, bx = D.moon.x, by = D.moon.y + D.moon.r * .92;
-    var cx = ax + (bx - ax) * .1, cy = by + (ay - by) * .55, steps = 64, n = Math.max(2, Math.round(steps * f)), q = null;
-    var lg = ctx.createLinearGradient(ax, ay, bx, by);
-    lg.addColorStop(0, 'rgba(232,203,122,0)'); lg.addColorStop(1, 'rgba(240,214,140,.9)');
-    ctx.strokeStyle = lg; ctx.lineWidth = 2; ctx.lineCap = 'round';
-    ctx.beginPath();
-    for (var i = 0; i <= n; i++) {
-      var u = i / steps, v = 1 - u;
-      q = [v * v * ax + 2 * v * u * cx + u * u * bx, v * v * ay + 2 * v * u * cy + u * u * by];
-      if (i) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]);
-    }
-    ctx.stroke();
-    if (f < 1 && q) {
-      var hg = ctx.createRadialGradient(q[0], q[1], 0, q[0], q[1], 22);
-      hg.addColorStop(0, 'rgba(255,236,180,.95)'); hg.addColorStop(1, 'rgba(255,236,180,0)');
-      ctx.fillStyle = hg; ctx.fillRect(q[0] - 22, q[1] - 22, 44, 44);
-    }
-  };
-
-  /* ================= the window: wall, reveal, frame and glass ================= */
-  function buildRoom(svg, W, H) {
-    if (W < 50 || H < 50) return { cx: W / 2, cy: H / 2 };
-    var mobile = W < 760;
-    var gw = mobile ? W * .7 : clamp(W * .34, 300, 620), gh = mobile ? H * .44 : Math.min(H * .64, gw * 1.36);
-    var cx = W / 2, cy = H * .5;
-    var x0 = cx - gw / 2, y0 = cy - gh / 2, x1 = cx + gw / 2, y1 = cy + gh / 2;
-    var dp = gw * .075, ix0 = x0 + dp, iy0 = y0 + dp * .9, ix1 = x1 - dp, iy1 = y1 - dp * .45;
-    var fw = Math.max(5, gw * .018), tr = iy0 + (iy1 - iy0) * .2, R = Math.max(W, H);
-    var f = function (n) { return n.toFixed(1); };
-    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
-    svg.innerHTML =
-      '<defs>' +
-      '<radialGradient id="wl" gradientUnits="userSpaceOnUse" cx="' + f(cx) + '" cy="' + f(cy) + '" r="' + f(R * .78) + '"><stop offset="0" stop-color="#2E2316"/><stop offset=".34" stop-color="#16110B"/><stop offset="1" stop-color="#070605"/></radialGradient>' +
-      '<linearGradient id="rt" gradientUnits="userSpaceOnUse" x1="0" y1="' + f(y0) + '" x2="0" y2="' + f(iy0) + '"><stop offset="0" stop-color="#0A0806"/><stop offset="1" stop-color="#1B150E"/></linearGradient>' +
-      '<linearGradient id="rb" gradientUnits="userSpaceOnUse" x1="0" y1="' + f(iy1) + '" x2="0" y2="' + f(y1) + '"><stop offset="0" stop-color="#4A3920"/><stop offset="1" stop-color="#1E170E"/></linearGradient>' +
-      '<linearGradient id="rl" gradientUnits="userSpaceOnUse" x1="' + f(x0) + '" y1="0" x2="' + f(ix0) + '" y2="0"><stop offset="0" stop-color="#0E0B08"/><stop offset="1" stop-color="#241C12"/></linearGradient>' +
-      '<linearGradient id="rr" gradientUnits="userSpaceOnUse" x1="' + f(x1) + '" y1="0" x2="' + f(ix1) + '" y2="0"><stop offset="0" stop-color="#0B0907"/><stop offset="1" stop-color="#1C160E"/></linearGradient>' +
-      '<linearGradient id="sh" gradientUnits="userSpaceOnUse" x1="' + f(ix0) + '" y1="' + f(iy0) + '" x2="' + f(ix1) + '" y2="' + f(iy1) + '"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".4" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#FFF1D6" stop-opacity=".07"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/><stop offset=".8" stop-color="#FFF1D6" stop-opacity=".035"/><stop offset=".86" stop-color="#fff" stop-opacity="0"/></linearGradient>' +
-      '</defs>' +
-      '<path fill="url(#wl)" fill-rule="evenodd" d="M' + f(-W) + ' ' + f(-H) + 'H' + f(2 * W) + 'V' + f(2 * H) + 'H' + f(-W) + 'Z M' + f(x0) + ' ' + f(y0) + 'V' + f(y1) + 'H' + f(x1) + 'V' + f(y0) + 'Z"/>' +
-      '<polygon fill="url(#rt)" points="' + [x0, y0, x1, y0, ix1, iy0, ix0, iy0].map(f).join(' ') + '"/>' +
-      '<polygon fill="url(#rb)" points="' + [x0, y1, ix0, iy1, ix1, iy1, x1, y1].map(f).join(' ') + '"/>' +
-      '<polygon fill="url(#rl)" points="' + [x0, y0, ix0, iy0, ix0, iy1, x0, y1].map(f).join(' ') + '"/>' +
-      '<polygon fill="url(#rr)" points="' + [x1, y0, x1, y1, ix1, iy1, ix1, iy0].map(f).join(' ') + '"/>' +
-      '<rect x="' + f(ix0) + '" y="' + f(iy0) + '" width="' + f(ix1 - ix0) + '" height="' + f(iy1 - iy0) + '" fill="url(#sh)"/>' +
-      '<rect x="' + f(ix0) + '" y="' + f(tr) + '" width="' + f(ix1 - ix0) + '" height="' + f(fw * 1.1) + '" fill="#1E1810"/>' +
-      '<rect x="' + f(ix0) + '" y="' + f(tr) + '" width="' + f(ix1 - ix0) + '" height="1" fill="#E8CB7A" fill-opacity=".22"/>' +
-      '<rect x="' + f(ix0) + '" y="' + f(iy0) + '" width="' + f(ix1 - ix0) + '" height="' + f(iy1 - iy0) + '" fill="none" stroke="#231C12" stroke-width="' + f(fw) + '"/>' +
-      '<rect x="' + f(ix0 + fw / 2 + .5) + '" y="' + f(iy0 + fw / 2 + .5) + '" width="' + f(Math.max(0, ix1 - ix0 - fw - 1)) + '" height="' + f(Math.max(0, iy1 - iy0 - fw - 1)) + '" fill="none" stroke="#E8CB7A" stroke-opacity=".2" stroke-width="1"/>' +
-      '<line x1="' + f(x0) + '" y1="' + f(y1) + '" x2="' + f(x1) + '" y2="' + f(y1) + '" stroke="#E8CB7A" stroke-opacity=".32" stroke-width="1.5"/>';
-    return { cx: cx, cy: cy };
-  }
-
-  /* ================= smooth scrolling: one clock for everything =================
-     Lenis eases the wheel; the scene reads Lenis's own position in the same frame,
-     so the canvas, the pinned stage and the captions never drift apart. Touch keeps
-     native scrolling. Lenis loads in the background and the page works without it. */
-  var lenis = null;
-  if (!reduced) {
-    var ls = document.createElement('script');
-    ls.src = 'https://cdn.jsdelivr.net/npm/lenis@1.2.3/dist/lenis.min.js';
-    ls.async = true;
-    ls.onload = function () {
-      try { lenis = new window.Lenis({ lerp: .1, smoothWheel: true, wheelMultiplier: 1, syncTouch: false }); } catch (e) { lenis = null; }
-    };
-    document.head.appendChild(ls);
-  }
-  function scrollPos() { return lenis ? lenis.scroll : window.scrollY; }
-  function ease4(t) { return t < .5 ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2; }
-  $$('a[href^="#"]').forEach(function (a) {
-    a.addEventListener('click', function (e) {
-      var id = a.getAttribute('href'), el = id.length > 1 && document.querySelector(id);
-      if (!el) return;
-      e.preventDefault();
-      if (lenis) lenis.scrollTo(id === '#top' ? 0 : el, { duration: 1.9, easing: ease4 });
-      else if (id === '#top') window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
-      else el.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
-    });
-  });
-
-  /* ================= the scene ================= */
-  var scene = $('#top'), stage = $('#stage'), room = $('#room'), svg = $('#room-svg'), hero = $('#hero');
-  var sky = $('#sky'), skyDusk = $('#sky-dusk'), skyNight = $('#sky-night'), skyGlow = $('#sky-glow');
-  var hl = $$('.hl'), caps = $$('.cap'), finalBtn = $('.cap-final .btn');
-  var hud = $('#hud'), hudRev = $('#hud-rev'), hudBr = $('#hud-brands'), dock = $('#dock'), nav = $('#nav');
-  var city = new City($('#city'), { seed: 11, budget: touch ? 2e6 : 3.8e6 });
-  var sky2 = new City($('#skyline'), { seed: 23, clearSky: true, budget: 2.4e6 });
-  var geo = { top: 0, span: 1, h: 0, vh: 0 }, P = 0, PS = -1, mx = 0, tmx = 0, finaleOn = false, footOn = false, needSky2 = true;
-  var t0 = performance.now(), lastFrame = 0, mem = {};
-
-  function set(key, el, prop, val) { if (mem[key] !== val) { mem[key] = val; el.style[prop] = val; } }
-  function cls(key, el, name, on) { if (mem[key] !== on) { mem[key] = on; el.classList.toggle(name, on); } }
-  function text(key, el, val) { if (mem[key] !== val) { mem[key] = val; el.textContent = val; } }
-  function money(v) { return v < 1e3 ? '$0' : v < 1e6 ? '$' + Math.round(v / 1e3) + 'K' : '$' + (v / 1e6).toFixed(1) + 'M'; }
-  function measure() { geo.vh = stage.clientHeight || innerHeight; geo.top = scene.offsetTop; geo.h = scene.offsetHeight; geo.span = Math.max(1, geo.h - geo.vh); }
-
-  function layout() {
-    city.size();
-    var W = stage.clientWidth, H = stage.clientHeight;
-    var o = buildRoom(svg, W, H);
-    room.style.transformOrigin = o.cx + 'px ' + o.cy + 'px';
-    measure();
-    geo.R = Math.max(W, H) * .7;
-    skyDusk.style.height = skyNight.style.height = (H * 3.15).toFixed(1) + 'px';
-    skyGlow.style.width = skyGlow.style.height = (geo.R * 2).toFixed(1) + 'px';
-    skyGlow.style.left = (W / 2 - geo.R).toFixed(1) + 'px';
-    needSky2 = true; PS = -1; mem = {};
-  }
-  var lastW = innerWidth, lastH = innerHeight, rt = 0;
-  addEventListener('resize', function () {
-    var w = innerWidth, h = innerHeight;
-    if (touch && w === lastW && Math.abs(h - lastH) < 160) return;   /* the mobile toolbar sliding in and out */
-    lastW = w; lastH = h;
-    clearTimeout(rt); rt = setTimeout(layout, 120);
-  });
-  addEventListener('pointermove', function (e) { mx = e.clientX / innerWidth * 2 - 1; }, { passive: true });
-
-  function frame(now) {
-    requestAnimationFrame(frame);
-    if (lenis) lenis.raf(now);
-    var dt = lastFrame ? now - lastFrame : 0; lastFrame = now;
-    var y = scrollPos();
-    P = clamp((y - geo.top) / geo.span, 0, 1);
-    var sceneOn = y < geo.top + geo.h && y + geo.vh > geo.top;
-    cls('solid', nav, 'is-solid', y > geo.top + geo.span - 60);
-
-    if (sceneOn) {
-      /* no second easing on top of Lenis; only a light touch for plain wheel steps */
-      PS = (PS < 0 || lenis || touch || reduced) ? P : PS + (P - PS) * .22;
-      if (Math.abs(P - PS) < .0002) PS = P;
-      var p = PS, zi = seg(p, 0, .15);
-      var ro = 1 - seg(p, .11, .155);
-      set('rt', room, 'transform', 'scale(' + (1 + Math.pow(zi, 2.2) * 3.8).toFixed(4) + ')');
-      set('ro', room, 'opacity', ro.toFixed(3));
-      set('rv', room, 'visibility', ro <= 0 ? 'hidden' : 'visible');
-      var hk = seg(p, 0, .07);
-      set('ho', hero, 'opacity', (1 - hk).toFixed(3));
-      set('hv', hero, 'visibility', hk >= 1 ? 'hidden' : 'visible');
-      var hx = (hk * 9).toFixed(2);
-      set('h0', hl[0], 'transform', 'translate3d(-' + hx + 'vw,0,0)');
-      set('h1', hl[1], 'transform', 'translate3d(-' + hx + 'vw,0,0)');
-      set('h2', hl[2], 'transform', 'translate3d(' + hx + 'vw,0,0)');
-      for (var i = 0; i < caps.length; i++) {
-        var c = caps[i], a = +c.dataset.a, b = +c.dataset.b;
-        cls('c' + i, c, 'on', p >= a && p < b);
-        cls('p' + i, c, 'past', p >= b);
-      }
-      var finalOn = p >= .88;
-      if (mem.fb !== finalOn) { mem.fb = finalOn; finalBtn.tabIndex = finalOn ? 0 : -1; }
-      cls('dim', stage, 'dim', p > .14 && p < .77);
-      cls('hud', hud, 'on', p > .15 && p < .79);
-      text('rev', hudRev, money(1.5e6 * seg(p, .14, .76)));
-      text('br', hudBr, String(Math.round(9 * seg(p, .14, .74))));
-      cls('dock', dock, 'hide', finalOn || finaleOn || footOn);
-      tmx += (mx - tmx) * .05;
-      var st = { g: seg(p, .12, .78), night: seg(p, .05, .7), tilt: inOut(seg(p, .78, .95)), trail: seg(p, .83, .95),
-        trailFade: 1 - seg(p, .9, .98), zoom: 1 + inOut(zi) * .12, t: reduced ? 6 : (now - t0) / 1000, mx: reduced ? 0 : tmx, horizon: .6 };
-      /* the sky: same horizon math as the canvas, applied as GPU transforms */
-      var H = geo.vh, hy = H * .6 + st.g * H * .04 + st.tilt * H * 1.25, sy = (hy - 3.15 * H).toFixed(1);
-      set('sz', sky, 'transform', 'scale(' + st.zoom.toFixed(4) + ')');
-      set('sd', skyDusk, 'transform', 'translate3d(0,' + sy + 'px,0)');
-      set('sn', skyNight, 'transform', 'translate3d(0,' + sy + 'px,0)');
-      set('so', skyNight, 'opacity', st.night.toFixed(3));
-      set('gt', skyGlow, 'transform', 'translate3d(0,' + (hy - geo.R).toFixed(1) + 'px,0)');
-      set('go', skyGlow, 'opacity', (.1 + .24 * st.g * (.4 + .6 * st.night)).toFixed(3));
-      var d0 = performance.now();
-      city.draw(st);
-      if (!reduced) city.track(performance.now() - d0, dt);
-    } else {
-      cls('dock', dock, 'hide', finaleOn || footOn);
-    }
-    /* the closing skyline is a still picture: drawn once, not every frame */
-    if (finaleOn && needSky2) {
-      needSky2 = false; sky2.size();
-      sky2.draw({ g: 1, night: 1, tilt: 0, trail: 0, trailFade: 0, zoom: 1, t: 6, mx: 0, horizon: .5 });
-    }
-  }
-
-  /* ================= logo roll ================= */
-  var track = $('#track'), pp = $('#pp');
-  if (track && !reduced) {
-    $$('li', track).forEach(function (li) {
-      var c = li.cloneNode(true); c.setAttribute('aria-hidden', 'true');
-      $$('img', c).forEach(function (im) { im.alt = ''; });
-      track.appendChild(c);
-    });
-    track.classList.add('rolling');
-    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { track.classList.toggle('sleep', !es[0].isIntersecting); }).observe(track);
-    var PAUSE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5h2.6v13H8zM13.4 5.5H16v13h-2.6z"/></svg>';
-    var PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 5.8v12.4a.6.6 0 0 0 .9.5l9.6-6.2a.6.6 0 0 0 0-1L9.4 5.3a.6.6 0 0 0-.9.5z"/></svg>';
-    var paused = false;
-    var showPP = function () { pp.innerHTML = paused ? PLAY : PAUSE; pp.setAttribute('aria-label', paused ? 'Play the logos' : 'Pause the logos'); track.classList.toggle('paused', paused); };
-    pp.addEventListener('click', function () { paused = !paused; showPP(); });
-    showPP();
-  } else if (pp) { pp.remove(); }
-
-  /* ================= directory ================= */
-  $$('.floor').forEach(function (fl) {
-    var b = $('.floor-row', fl), dt = $('.floor-detail', fl);
-    dt.inert = true;
-    b.addEventListener('click', function () {
-      var open = !fl.classList.contains('open');
-      fl.classList.toggle('open', open);
-      b.setAttribute('aria-expanded', String(open));
-      dt.inert = !open;
-    });
-  });
-
-  /* ================= reveals and visibility ================= */
-  if ('IntersectionObserver' in window) {
-    var once = new IntersectionObserver(function (es) {
-      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); once.unobserve(e.target); } });
-    }, { threshold: .15, rootMargin: '0px 0px -6% 0px' });
-    $$('.rv, #board').forEach(function (el) { once.observe(el); });
-    new IntersectionObserver(function (es) { finaleOn = es[0].isIntersecting; }, { threshold: .05, rootMargin: '0px 0px 240px 0px' }).observe($('#book'));
-    new IntersectionObserver(function (es) { footOn = es[0].isIntersecting; }).observe($('#foot'));
-  } else {
-    $$('.rv, #board').forEach(function (el) { el.classList.add('in'); });
-    finaleOn = true;
-  }
-
-  /* ================= start ================= */
-  layout();
-  requestAnimationFrame(frame);
-  if (window.ResizeObserver) new ResizeObserver(measure).observe(scene);
-  var fontsReady = (document.fonts && document.fonts.ready) || Promise.resolve();
-  Promise.race([fontsReady, new Promise(function (r) { setTimeout(r, 500); })]).then(function () { root.classList.add('go'); });
-  if (/[?&]debug/.test(location.search)) window.__scald = {
-    city: city, sky: sky2, go: function (y) { if (lenis) lenis.scrollTo(y, { immediate: true }); else window.scrollTo(0, y); }
-  };
-})();
-</script>
 </body>
 </html>
