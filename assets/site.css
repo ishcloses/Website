@@ -32,7 +32,7 @@ button{font:inherit;color:inherit}
 
 /* Instrument Serif ships in one weight; a hairline stroke gives it the Book weight of print-era Garamond Condensed */
 .hero-h1,.scene-line,.sec-head h2,.stat-n,.fl-name,.fs-body h3,.keys h3,.why h2,.coin-b strong,.closed h2,.finale h2,.lg-closed,
-.ab-hero h1,.letter h2,.letter blockquote,.sign{-webkit-text-stroke:.012em currentColor}
+.ab-hero h1,.letter h2,.letter blockquote,.motto p{-webkit-text-stroke:.012em currentColor}
 
 /* the voice: every small description is set in lowercase; the name keeps its capital D */
 .hero-sub,.hero-hint,.sec-head p,.stat-l,.fl-what,.fd-meta,.fd-list,.fs-sub,.fs-d,.keys p,.why-copy p,.cmp-l,.closed-from,.closed-body,.closed-act span,
@@ -349,22 +349,25 @@ button{font:inherit;color:inherit}
    ========================================================================== */
 .ab-hero{padding:clamp(120px,18vh,170px) 0 clamp(40px,6vh,70px)}
 .ab-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);align-items:end;gap:clamp(36px,6vw,96px)}
-.ab-hero h1{font:400 clamp(3.6rem,9vw,8.4rem)/.9 var(--serif);letter-spacing:-.01em}
+.ab-hero h1{font:400 clamp(3.6rem,7.6vw,8.4rem)/.9 var(--serif);letter-spacing:-.01em}
 .ab-hero p{max-width:32rem;margin-top:24px;color:var(--soft);font-size:1.2rem}
+.ab-hero p + p{margin-top:12px}
 .ab-hero .hero-cta{margin-top:30px}
 .ab-photo{position:relative;margin:0;overflow:hidden;aspect-ratio:3/4;border:1px solid var(--gold-line);border-radius:22px;background:#0C0C13}
-.letters{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,3.5vw,48px);padding-top:clamp(20px,4vh,40px);padding-bottom:clamp(70px,10vh,110px)}
+.letters{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,3.5vw,48px);padding-top:clamp(20px,4vh,40px);padding-bottom:clamp(56px,8vh,90px)}
 .letter{padding:clamp(26px,3.5vw,46px);border:1px solid var(--gold-line);border-radius:22px;background:var(--panel)}
 .letter h2{font:400 clamp(2.5rem,4.2vw,3.6rem)/1 var(--serif)}
 .role{margin-top:10px;font:500 1rem/1 var(--text);letter-spacing:.04em;color:var(--gold-hi)}
 .letter blockquote{margin:28px 0 8px;padding-left:18px;border-left:2px solid var(--gold);font:400 clamp(1.7rem,2.5vw,2.2rem)/1.1 var(--serif);color:var(--cream)}
 .letter p{margin-top:16px;color:var(--soft)}
-.letter .sign{margin-top:26px;font:400 clamp(1.7rem,2.4vw,2.1rem)/1 var(--serif);color:var(--gold-hi);text-transform:none}
+.motto{display:grid;justify-items:center;gap:20px;text-align:center;padding-bottom:clamp(10px,3vh,30px)}
+.motto-mark{width:26px;height:32px;fill:var(--gold-hi);filter:drop-shadow(0 0 12px rgba(232,203,122,.45))}
+.motto p{font:400 clamp(2.3rem,5vw,4.4rem)/1 var(--serif);color:var(--gold-hi);letter-spacing:-.005em}
 .socials{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px;padding-top:22px;border-top:1px solid var(--line)}
 .soc{display:inline-flex;align-items:center;gap:9px;height:42px;padding:0 18px;border:1px solid var(--gold-line);border-radius:999px;font:500 1rem/1 var(--text);letter-spacing:.01em;color:var(--soft);text-decoration:none;transition:border-color .25s,color .25s,background-color .25s}
 .soc:hover{border-color:var(--gold);color:var(--gold-hi);background:rgba(201,168,76,.06)}
 .soc .ic{width:17px;height:17px}
-@media (max-width:900px){.ab-grid,.letters{grid-template-columns:1fr}.ab-photo{aspect-ratio:4/4.6}}
+@media (max-width:900px){.ab-grid,.letters{grid-template-columns:1fr}.ab-hero h1{font-size:clamp(3.4rem,11vw,6.4rem)}.ab-photo{aspect-ratio:4/4.6}}
 
 @media (prefers-reduced-motion:reduce){
   .js #city,.js .sky,.js .hl-in,.js .hero-foot,.js .hero-hint,.js .floor,.js .rv .ln > span,.js .rv .rv-f,.js .tw.rv .tw-fl,.js .tw.rv .tw-crown{opacity:1;transform:none;transition:none}
