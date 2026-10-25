@@ -20,7 +20,7 @@
     ls.src = 'https://cdn.jsdelivr.net/npm/lenis@1.2.3/dist/lenis.min.js';
     ls.async = true;
     ls.onload = function () {
-      try { SC.lenis = new window.Lenis({ lerp: .1, smoothWheel: true, wheelMultiplier: 1, syncTouch: false }); } catch (e) { SC.lenis = null; }
+      try { SC.lenis = new window.Lenis({ lerp: .125, smoothWheel: true, wheelMultiplier: 1, syncTouch: false }); } catch (e) { SC.lenis = null; }
     };
     document.head.appendChild(ls);
   }
@@ -75,14 +75,13 @@
       })(performance.now());
     });
   }
-  var revealables = $$('.rv, .board, .stats');
+  var revealables = $$('.rv, .stats, .kit');
   if ('IntersectionObserver' in window) {
     var once = new IntersectionObserver(function (es) {
       es.forEach(function (e) {
         if (!e.isIntersecting) return;
         e.target.classList.add('in');
         if (e.target.classList.contains('stats')) countUp(e.target);
-        if (e.target.classList.contains('tw')) setTimeout(function () { e.target.classList.add('lit'); }, reduced ? 0 : 900);
         once.unobserve(e.target);
       });
     }, { threshold: .15, rootMargin: '0px 0px -6% 0px' });
@@ -111,35 +110,21 @@
     showPP();
   } else if (pp) { pp.remove(); }
 
-  /* ---------- client directory ---------- */
-  $$('.floor').forEach(function (fl) {
-    var b = $('.floor-row', fl), dt = $('.floor-detail', fl);
-    if (!b || !dt) return;
-    dt.inert = true;
-    b.addEventListener('click', function () {
-      var open = !fl.classList.contains('open');
-      fl.classList.toggle('open', open);
-      b.setAttribute('aria-expanded', String(open));
-      dt.inert = !open;
+  /* ---------- the SCALD Method: each step you read lights its floor, and the floors below stay lit ---------- */
+  var steps = $$('.fstep'), tower = $('#tower');
+  if (steps.length) {
+    var floors = tower ? $$('.tw-fl', tower) : [], msec = $('#method'), mvis = !('IntersectionObserver' in window), built = -1;
+    if (!mvis) new IntersectionObserver(function (es) { mvis = es[0].isIntersecting; }, { rootMargin: '20% 0px 20% 0px' }).observe(msec);
+    SC.ticks.push(function () {
+      if (!mvis) return;
+      var mid = innerHeight * .6, n = 0;
+      for (var i = 0; i < steps.length; i++) if (steps[i].getBoundingClientRect().top < mid) n = i + 1;
+      if (n === built) return;
+      built = n;
+      steps.forEach(function (s, i) { s.classList.toggle('on', i + 1 === n); s.classList.toggle('done', i + 1 < n); });
+      floors.forEach(function (f) { var k = +f.dataset.f; f.classList.toggle('on', k === n); f.classList.toggle('built', k <= n); });
+      if (tower) { tower.classList.toggle('lit', n > 0); tower.classList.toggle('done', n >= steps.length); }
     });
-  });
-
-  /* ---------- method: pointing at a step lights its floor in the tower ---------- */
-  var tower = $('#tower');
-  if (tower) {
-    var floors = {};
-    $$('.tw-fl', tower).forEach(function (f) { floors[f.dataset.f] = f; });
-    var steps = $$('.fstep');
-    var light = function (n) {
-      steps.forEach(function (s) { s.classList.toggle('on', s.dataset.f === n); });
-      Object.keys(floors).forEach(function (k) { floors[k].classList.toggle('on', k === n); });
-    };
-    steps.forEach(function (s) {
-      s.addEventListener('pointerenter', function () { light(s.dataset.f); });
-      s.addEventListener('focusin', function () { light(s.dataset.f); });
-    });
-    var list = $('.fsteps');
-    if (list) list.addEventListener('pointerleave', function () { light(null); });
   }
 
   /* ---------- gold buttons tilt toward the pointer and catch the light where it is ---------- */
@@ -157,5 +142,5 @@
 
   /* ---------- start ---------- */
   var fontsReady = (document.fonts && document.fonts.ready) || Promise.resolve();
-  Promise.race([fontsReady, new Promise(function (r) { setTimeout(r, 500); })]).then(function () { root.classList.add('go'); });
+  Promise.race([fontsReady, new Promise(function (r) { setTimeout(r, 300); })]).then(function () { root.classList.add('go'); });
 })();
