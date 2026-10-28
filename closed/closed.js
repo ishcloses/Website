@@ -39,6 +39,11 @@ var QUESTIONS = [
 (function () {
   'use strict';
   var C = CONFIG, doc = document, page = doc.body.getAttribute('data-page');
+  /* a still page: no pinch or double-tap zoom (iOS ignores the viewport setting for pinches) */
+  ['gesturestart', 'gesturechange', 'gestureend'].forEach(function (n) { doc.addEventListener(n, function (e) { e.preventDefault(); }, { passive: false }); });
+  doc.addEventListener('touchmove', function (e) { if (e.touches && e.touches.length > 1) e.preventDefault(); }, { passive: false });
+  var lastTouch = 0;
+  doc.addEventListener('touchend', function (e) { var now = Date.now(); if (now - lastTouch < 320 && !e.target.closest('input,textarea,select,a,button,summary,iframe')) e.preventDefault(); lastTouch = now; }, { passive: false });
   var $ = function (s, c) { return (c || doc).querySelector(s); };
   var $$ = function (s, c) { return [].slice.call((c || doc).querySelectorAll(s)); };
   var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -266,7 +271,7 @@ var QUESTIONS = [
       (inApp ? btn + '<p class="bk-note">Calendar not loading in this app? Tap the button.</p>' : '') +
       '<iframe class="bk-frame" src="' + esc(C.booking.embed) + '" title="Book a call with Ismail" loading="lazy"></iframe>' +
       (inApp ? '' : btn) +
-      '<div class="bk-confirm"><p>Picked a time? Tap this so I know you\'re locked in.</p><a class="btn btn-lg" href="/closed/booked/"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>I booked my call</a></div>' +
+      '<div class="bk-confirm"><p>Picked a time? Tap this so I know you\'re locked in.</p><a class="btn btn-lg" href="/closed/booked/">I booked my call<svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></a></div>' +
       '<div class="bk-after"><h3>After you book</h3><ul class="list">' + pre + '<li>Show up on time.</li><li>Be somewhere quiet.</li><li>Come with questions.</li></ul></div>' +
       backBtn('Back to my answers') + '</div>';
   }
