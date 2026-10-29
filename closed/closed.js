@@ -96,7 +96,7 @@ var QUESTIONS = [
   var labels = { cohortLong: C.cohort.long, cohortShort: C.cohort.short, spots: C.cohort.spots, doorsClose: C.cohort.doorsClose };
   $$('[data-bind]').forEach(function (el) { var k = el.getAttribute('data-bind'); if (labels[k] != null) el.textContent = labels[k]; });
   function ctaText(t) { $$('[data-cta]').forEach(function (el) { el.textContent = t; }); }
-  ctaText('Apply for the ' + C.cohort.short + ' cohort');
+  ctaText('be one of the ' + C.cohort.spots);
 
   /* ---------- countdown to the cohort, in Central time ---------- */
   var bar = $('#bar'), target = Date.parse(C.cohort.start), cd = {};
