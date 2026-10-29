@@ -2,11 +2,11 @@
    Everything you'll want to change lives in CONFIG right below. */
 var CONFIG = {
   cohort: {
-    start: '2026-11-15T00:00:00-06:00',   // Sunday, Nov 15, 12:00 AM Central (Dallas). The countdown runs to this.
-    long: 'Sunday, Nov 15',              // shown in the bar, FAQ and final section
-    short: 'Nov 15',                     // shown on the buttons: "Apply for the Nov 15 cohort"
+    start: '2026-12-07T00:00:00-06:00',   // Monday, Dec 7, 12:00 AM Central (Dallas). The countdown runs to this.
+    long: 'Monday, Dec 7',              // shown in the bar, FAQ and final section
+    short: 'Dec 7',                     // short form of the date
     spots: '15',                         // how many spots
-    doorsClose: 'Sunday, Nov 15'         // when applications for this cohort close
+    doorsClose: 'Monday, Dec 7'         // when applications for this cohort close
   },
   booking: {
     link: 'https://calendar.app.google/cDBpxXE37ATK8RDN8',
