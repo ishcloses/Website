@@ -13,9 +13,11 @@ var CONFIG = {
     embed: 'https://calendar.google.com/calendar/appointments/schedules/AcZssZ15-eXbX8qXRTHMDjIa-7qFMv2QrBXkT9YBua8ofGfaePBWQ4jOoU6MEOjhF6Ekhv-MK-xx-vrY?gv=true'
   },
   form: {
-    // FormSubmit sends every application to the first address and copies everyone in cc.
-    // After you activate it, you can swap the email here for the random string FormSubmit gives you.
-    endpoint: 'https://formsubmit.co/ajax/ishcloses@gmail.com',
+    // Applications go to Netlify Forms first (built into the hosting, see the hidden form at the bottom of index.html).
+    // Email alerts are set in Netlify: Forms > closed-application > Form notifications.
+    // If Netlify can't be reached, FormSubmit is the backup: the first address gets it and everyone in cc is copied.
+    netlify: 'closed-application',
+    backup: 'https://formsubmit.co/ajax/ishcloses@gmail.com',
     cc: ['nizalsells@gmail.com']
   },
   instagram: 'ishcloses',
@@ -83,6 +85,36 @@ var QUESTIONS = [
   }
   loadPixels();
 
+  /* ---------- sending an application: Netlify Forms, then FormSubmit as the backup ----------
+     If both are down the applicant still books their call. The answers wait in this browser
+     and get sent again the next time any Closed page opens (the booked page is the next one). */
+  var PENDING = 'closed-pending';
+  function post(url, opts) {
+    var ctrl = 'AbortController' in window ? new AbortController() : null, timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 9000);
+    opts.signal = ctrl && ctrl.signal;
+    return fetch(url, opts).then(function (r) { clearTimeout(timer); return r; }, function (e) { clearTimeout(timer); throw e; });
+  }
+  function viaNetlify(f) {
+    var b = new URLSearchParams(); b.append('form-name', C.form.netlify);
+    Object.keys(f).forEach(function (k) { b.append(k, f[k]); });
+    return post('/closed/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: b.toString() })
+      .then(function (r) { if (!r.ok) throw new Error('Netlify said ' + r.status); });
+  }
+  function viaBackup(f) {
+    var p = { _subject: f.subject, _template: 'table', _captcha: 'false', _cc: C.form.cc.join(','), _honey: '' };
+    Object.keys(f).forEach(function (k) { if (k !== 'subject') p[k] = f[k]; });
+    return post(C.form.backup, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(p) })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (res) { if (!r.ok || String(res.success) !== 'true') throw new Error(res.message || 'FormSubmit said ' + r.status); }); });
+  }
+  function deliver(f) {
+    return viaNetlify(f).catch(function (err) {
+      if (window.console) console.warn('Closed application: Netlify failed, trying the backup.', err && err.message);
+      return viaBackup(f);
+    });
+  }
+  var waiting = store.get(PENDING);
+  if (waiting) deliver(waiting).then(function () { try { localStorage.removeItem(PENDING); } catch (e) { } }, function () { });
+
   /* ---------- the booked page ---------- */
   if (page === 'booked') {
     track('schedule');
@@ -96,24 +128,26 @@ var QUESTIONS = [
   var labels = { cohortLong: C.cohort.long, cohortShort: C.cohort.short, spots: C.cohort.spots, doorsClose: C.cohort.doorsClose };
   $$('[data-bind]').forEach(function (el) { var k = el.getAttribute('data-bind'); if (labels[k] != null) el.textContent = labels[k]; });
   function ctaText(t) { $$('[data-cta]').forEach(function (el) { el.textContent = t; }); }
-  ctaText('be one of the ' + C.cohort.spots);
+  ctaText('join the roster');
 
   /* ---------- countdown to the cohort, in Central time ---------- */
   var bar = $('#bar'), target = Date.parse(C.cohort.start), cd = {};
-  $$('[data-cd]').forEach(function (el) { cd[el.getAttribute('data-cd')] = el; });
+  $$('[data-cd]').forEach(function (el) { var k = el.getAttribute('data-cd'); (cd[k] = cd[k] || []).push(el); });
+  var put = function (k, v) { cd[k].forEach(function (el) { el.textContent = v; }); };
   var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
   function tick() {
     var ms = target - Date.now();
     if (!(ms > 0)) {
       bar.classList.add('done');
-      $('.bar-msg', bar).textContent = 'Cohort started. Apply for the next one.';
-      ctaText('Apply for the next cohort');
-      var ft = $('#final-t'); if (ft) ft.textContent = 'The next one opens soon.';
+      $('.bar-msg', bar).textContent = 'Draft Day is here. Apply for the next draft.';
+      var board = $('.board'); if (board) board.hidden = true;
+      ctaText('apply for the next draft');
+      var ft = $('#final-t'); if (ft) ft.textContent = 'The next draft opens soon.';
       return false;
     }
     var s = Math.floor(ms / 1000);
-    cd.d.textContent = pad(Math.floor(s / 86400)); cd.h.textContent = pad(Math.floor(s % 86400 / 3600));
-    cd.m.textContent = pad(Math.floor(s % 3600 / 60)); cd.s.textContent = pad(s % 60);
+    put('d', pad(Math.floor(s / 86400))); put('h', pad(Math.floor(s % 86400 / 3600)));
+    put('m', pad(Math.floor(s % 3600 / 60))); put('s', pad(s % 60));
     return true;
   }
   if (tick()) (function loop() { setTimeout(function () { if (tick()) loop(); }, 1000 - Date.now() % 1000 + 5); })();
@@ -134,7 +168,7 @@ var QUESTIONS = [
     if (key === layoutKey) return; layoutKey = key;
     var by = function (names) { return wins.filter(function (w) { return names.indexOf(w.student) > -1 || (names.indexOf('more') > -1 && MAIN.indexOf(w.student) < 0); }); };
     var cols = desk ? [by(['Shahzeb']), by(['Muzz']), by(['Ibrahim', 'more']), by(['Omar'])] : [by(['Shahzeb', 'Ibrahim', 'more']), by(['Muzz', 'Omar'])];
-    var speeds = desk ? [24, 29, 26, 31] : [22, 26];
+    var speeds = desk ? [28, 33, 30, 36] : [25, 30];
     wall.innerHTML = cols.map(function (list) {
       var once = list.map(function (w) { return card(w, false); }).join('');
       return '<div class="wall-col"><div class="wall-track">' + once + (reduced ? '' : list.map(function (w) { return card(w, true); }).join('')) + '</div></div>';
@@ -203,7 +237,7 @@ var QUESTIONS = [
       '<div class="qz-field' + (Q.type === 'ig' ? ' qz-at' : '') + '">' + field + '</div>' +
       '<p class="qz-err" id="qz-err" role="alert"></p>' +
       '<button class="btn" type="submit">' + (last ? 'Submit my application' : 'OK') + '<svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></button>' +
-      backBtn() + '<div class="qz-fail-slot"></div></form>';
+      backBtn() + '</form>';
     var f = $('form', body), inp = $('#qz-in', body);
     inp.setAttribute('aria-describedby', 'qz-err');
     inp.addEventListener('input', function () { st.a[Q.id] = inp.value; save(); $('#qz-err', body).textContent = ''; });
@@ -234,32 +268,24 @@ var QUESTIONS = [
   }
 
   function send(f) {
-    var btn = $('button[type="submit"]', f), slot = $('.qz-fail-slot', f), a = st.a;
-    btn.disabled = true; btn.firstChild.textContent = 'Sending...'; slot.innerHTML = '';
-    var payload = {
-      _subject: 'New Closed application: ' + a.name + (attr.ref ? ' (ref: ' + attr.ref + ')' : ''),
-      _template: 'table', _captcha: 'false', _cc: C.form.cc.join(','), _honey: '',
-      'First name': a.name, 'Doing for money': a.doing, 'Making a month': a.income, 'Wants in 6 months': a.goal,
-      'Hours a week': a.hours, 'Why now': a.why, 'Instagram': '@' + a.ig, 'Instagram link': 'https://instagram.com/' + a.ig,
-      'Ref': attr.ref || 'none', 'UTM source': attr.utm_source || '', 'UTM medium': attr.utm_medium || '', 'UTM campaign': attr.utm_campaign || '',
-      'UTM content': attr.utm_content || '', 'UTM term': attr.utm_term || '', 'Landing page': attr.landing || '',
-      'Submitted': new Date().toLocaleString('en-US', { timeZone: 'America/Chicago' }) + ' Central'
+    var btn = $('button[type="submit"]', f), a = st.a;
+    btn.disabled = true; btn.firstChild.textContent = 'Sending...';
+    var fields = {
+      subject: 'New Closed application: ' + a.name + (attr.ref ? ' (ref: ' + attr.ref + ')' : ''),
+      name: a.name, doing_for_money: a.doing, making_a_month: a.income, wants_in_6_months: a.goal,
+      hours_a_week: a.hours, why_now: a.why, instagram: '@' + a.ig, instagram_link: 'https://instagram.com/' + a.ig,
+      ref: attr.ref || 'none', utm_source: attr.utm_source || '', utm_medium: attr.utm_medium || '', utm_campaign: attr.utm_campaign || '',
+      utm_content: attr.utm_content || '', utm_term: attr.utm_term || '', landing_page: attr.landing || '',
+      submitted: new Date().toLocaleString('en-US', { timeZone: 'America/Chicago' }) + ' Central'
     };
-    var ctrl = 'AbortController' in window ? new AbortController() : null, timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 15000);
-    fetch(C.form.endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(payload), signal: ctrl && ctrl.signal })
-      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok, j: j }; }); })
-      .then(function (res) {
-        clearTimeout(timer);
-        if (!res.ok || String(res.j.success) !== 'true') throw new Error(res.j.message || 'The form service said no');
-        st.done = true; st.i = QUESTIONS.length - 1; save(); track('lead'); render();
-      })
-      .catch(function (err) {
-        clearTimeout(timer);
-        if (window.console) console.error('Closed application failed:', err && err.message);
-        btn.disabled = false; btn.firstChild.textContent = 'Try again';
-        slot.innerHTML = '<div class="qz-fail" role="alert"><p>That didn\'t go through on our end. Your answers are saved, so you can try again, or DM me on Instagram and I\'ll get you in.</p>' +
-          '<a class="btn btn-ghost" href="https://ig.me/m/' + esc(C.instagram) + '" target="_blank" rel="noopener">DM me on IG instead</a></div>';
-      });
+    var booking = function () { st.done = true; st.i = QUESTIONS.length - 1; save(); track('lead'); render(); };
+    deliver(fields).then(function () {
+      try { localStorage.removeItem(PENDING); } catch (e) { }
+      booking();
+    }, function (err) {
+      if (window.console) console.error('Closed application not sent yet, saved to resend:', err && err.message);
+      store.set(PENDING, fields); booking();
+    });
   }
 
   function renderBooking() {
