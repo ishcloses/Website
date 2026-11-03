@@ -89,9 +89,6 @@ h1,h2,.h3-disp{font-family:var(--sans);font-weight:700;text-transform:lowercase;
 .hero h1{margin-top:16px;font-size:clamp(2.9rem,12.4vw,6rem);line-height:.96;text-wrap:balance}
 .hero h1 .gold{display:block;margin-top:.06em}
 .hero-sub{max-width:34rem;margin:20px auto 0;font-size:17px;line-height:1.55;color:var(--soft)}
-.leads{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-width:540px;margin:22px auto 0;text-align:left}
-.leads li{display:flex;align-items:flex-start;gap:8px;padding:11px 12px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025);font:500 13.5px/1.3 var(--sans)}
-.leads .ic{flex:none;width:16px;height:16px;margin-top:1px;color:var(--gold-2);stroke-width:2.6}
 .hero .cta{display:flex;flex-direction:column;align-items:center}
 .hero .btn-lg{width:100%;max-width:400px}
 .guarantee{display:flex;align-items:flex-start;gap:14px;max-width:440px;margin:24px auto 0;padding:16px 18px;border:1px solid rgba(214,174,82,.4);border-radius:20px;text-align:left;
@@ -298,11 +295,16 @@ textarea.qz-input{min-height:140px;padding:15px 18px;resize:vertical}
 .qz-opt:hover{border-color:rgba(214,174,82,.45)}
 .qz-opt[aria-pressed="true"]{border-color:var(--gold);background:rgba(214,174,82,.1)}
 .qz-opt[aria-pressed="true"] .ic{opacity:1}
-.qz-prev{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:10px;padding:12px;border:0;background:none;font:500 15px/1 var(--sans);color:var(--soft)}
-.qz-prev:hover{color:var(--text)}
+.qz-prev,.qz-link{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:10px;padding:12px;border:0;background:none;font:500 15px/1 var(--sans);color:var(--soft)}
+.qz-prev:hover,.qz-link:hover{color:var(--text)}
 .qz-prev .ic{width:17px;height:17px}
 .qz-err{min-height:1.3em;margin-top:10px;font-size:14px;color:#FF8A73}
 .qz-step .btn{width:100%;margin-top:14px}
+/* after the last question: the fit screen, the text-me form and the not-a-fit screen */
+.qz-go{margin-top:12px}
+.qz-copy{margin-top:14px;font-size:16.5px;line-height:1.55;color:var(--soft)}
+.qz-step .qz-dm{margin-top:24px}
+.qz-fine{margin-top:10px;font-size:13px;line-height:1.45;color:var(--mute)}
 .bk-frame{display:block;width:100%;height:min(720px,76svh);margin-top:18px;border:0;border-radius:18px;background:#fff}
 .bk-alt{margin-top:12px}
 .bk-note{margin-top:8px;font-size:13.5px;color:var(--mute);text-align:center}
@@ -323,7 +325,12 @@ textarea.qz-input{min-height:140px;padding:15px 18px;resize:vertical}
 .page p{margin-top:14px;color:var(--soft)}
 .page .list{margin-top:14px}
 .page .btn{width:100%;max-width:400px}
-.vid{display:grid;place-items:center;width:min(100%,360px);aspect-ratio:9/16;margin-top:22px;padding:20px;border:1px dashed var(--line-2);border-radius:24px;background:var(--card);color:var(--mute);text-align:center;font-size:14px}
+.vid{position:relative;width:100%;aspect-ratio:16/9;margin-top:16px;overflow:hidden;border:1px solid var(--line);border-radius:18px;background:#000}
+.vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vid-tall{max-width:380px;aspect-ratio:9/16}
+/* the booked page has two versions: booked (default) and ?via=text */
+.only-text,.via-text .only-book{display:none}
+.via-text .only-text{display:block}
 .page .foot,.foot{text-align:center}
 
 @media (prefers-reduced-motion:reduce){

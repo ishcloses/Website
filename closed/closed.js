@@ -20,8 +20,14 @@ var CONFIG = {
     backup: 'https://formsubmit.co/ajax/ishcloses@gmail.com',
     cc: ['nizalsells@gmail.com']
   },
+  // Who isn't a fit yet. If any answer matches a line here, they see the not-a-fit screen instead of the calendar.
+  // question is the id from QUESTIONS below, answer is the option exactly as it's written there. Add as many lines as you like.
+  notAFit: [
+    { question: 'hours', answer: 'Under 10' }
+  ],
   instagram: 'ishcloses',
-  preCallVideo: '',                                    // the "watch this before the call" video link. Empty = placeholder.
+  // The "watch this before our call" video on the booked page. A Google Drive share link plays right on the page. Empty = section hidden.
+  preCallVideo: 'https://drive.google.com/file/d/1hM1O5UE2jh30GBnz1p2YGFpNQotNoqt0/view?usp=share_link',
   pixels: {
     meta: '',     // Meta Pixel ID. Empty = off. Fires PageView, Lead on application, Schedule on the booked page.
     tiktok: ''    // TikTok Pixel ID. Empty = off. Fires page, SubmitForm on application, Schedule on the booked page.
@@ -85,10 +91,11 @@ var QUESTIONS = [
   }
   loadPixels();
 
-  /* ---------- sending an application: Netlify Forms, then FormSubmit as the backup ----------
-     If both are down the applicant still books their call. The answers wait in this browser
-     and get sent again the next time any Closed page opens (the booked page is the next one). */
-  var PENDING = 'closed-pending';
+  /* ---------- sending to the inbox: Netlify Forms, then FormSubmit as the backup ----------
+     Three kinds share the one form: the application, "chose to book" and "text me first".
+     If both services are down the applicant carries on anyway. Whatever didn't send waits in this
+     browser and goes out again the next time any Closed page opens (the booked page is the next one). */
+  var PENDING = 'closed-pending', KEY = 'closed-app-v1';
   function post(url, opts) {
     var ctrl = 'AbortController' in window ? new AbortController() : null, timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 9000);
     opts.signal = ctrl && ctrl.signal;
@@ -112,14 +119,46 @@ var QUESTIONS = [
       return viaBackup(f);
     });
   }
-  var waiting = store.get(PENDING);
-  if (waiting) deliver(waiting).then(function () { try { localStorage.removeItem(PENDING); } catch (e) { } }, function () { });
+  function pending() { var p = store.get(PENDING) || {}; return p.subject ? { application: p } : p; }   // older visits saved one application on its own
+  function settle(kind, f) {
+    var p = pending(); if (f) p[kind] = f; else delete p[kind];
+    if (Object.keys(p).length) store.set(PENDING, p); else try { localStorage.removeItem(PENDING); } catch (e) { }
+  }
+  function submit(kind, f) {
+    return deliver(f).then(function () { settle(kind); }, function (err) {
+      if (window.console) console.error('Closed ' + kind + ' not sent yet, saved to resend:', err && err.message);
+      settle(kind, f);
+    });
+  }
+  var waiting = pending();
+  Object.keys(waiting).forEach(function (kind) {
+    deliver(waiting[kind]).then(function () { if (JSON.stringify(pending()[kind]) === JSON.stringify(waiting[kind])) settle(kind); }, function () { });
+  });
 
-  /* ---------- the booked page ---------- */
+  /* a Google Drive share link (drive.google.com/file/d/FILE_ID/view) plays through Drive's own player */
+  function driveId(url) { var m = /drive\.google\.com\/.*(?:\/d\/|[?&]id=)([\w-]{10,})/.exec(url || ''); return m && m[1]; }
+
+  /* ---------- the booked page: "You're booked" by default, "Got it" for ?via=text ---------- */
   if (page === 'booked') {
     track('schedule');
-    var v = $('#pre-video');
-    if (v && C.preCallVideo) { v.innerHTML = '<a class="btn" href="' + esc(C.preCallVideo) + '" target="_blank" rel="noopener">Watch the video</a>'; $('#pre-video-step').hidden = false; }
+    if (qs.get('via') === 'text') {
+      var who = ((store.get(KEY) || {}).a || {}).name;
+      $('#via-name').textContent = who ? ', ' + who : '';
+      doc.title = 'Got it | Closed';
+    }
+    var v = $('#pre-video'), drive = driveId(C.preCallVideo);
+    if (v && C.preCallVideo) {
+      v.innerHTML = drive
+        ? '<div class="vid"><iframe src="https://drive.google.com/file/d/' + drive + '/preview" title="Watch this before our call" allow="autoplay; fullscreen" allowfullscreen></iframe></div>'
+        : '<a class="btn" href="' + esc(C.preCallVideo) + '" target="_blank" rel="noopener">Watch the video</a>';
+      $('#pre-video-step').hidden = false;
+      // Drive picks the quality from the player's size, so a vertical video gets a vertical frame instead of a thin strip in 16:9
+      if (drive) {
+        var probe = new Image();
+        probe.onload = function () { if (probe.naturalHeight > probe.naturalWidth) $('.vid', v).classList.add('vid-tall'); };
+        probe.src = 'https://drive.google.com/thumbnail?id=' + drive + '&sz=w400';
+      }
+    }
     return;
   }
   if (page !== 'home') return;
@@ -197,20 +236,30 @@ var QUESTIONS = [
   }
 
   /* ---------- the application ---------- */
-  var qz = $('#apply'), body = $('#qz-body'), KEY = 'closed-app-v1';
-  var st = store.get(KEY) || { i: 0, a: {}, done: false };
+  /* after the last question st.view is where they are: fit, nofit, book (the calendar) or text (the text-me form) */
+  var qz = $('#apply'), body = $('#qz-body');
+  function load(s) {
+    s = s || { i: 0, a: {}, done: false };
+    if (s.done && !s.view) s.view = 'book';   // applications from before the fit screen go straight to the calendar
+    s.sent = s.sent || {};
+    return s;
+  }
+  var st = load(store.get(KEY));
   var save = function () { st.ts = Date.now(); store.set(KEY, st); };
   var inApp = /Instagram|FBAN|FBAV|TikTok|musical_ly|Bytedance|Snapchat/i.test(navigator.userAgent);
+  // ig.me opens the DM straight away on a phone. On a computer it hits a login wall, so the profile is the fallback there.
+  var dm = (inApp || matchMedia('(pointer: coarse)').matches ? 'https://ig.me/m/' : 'https://instagram.com/') + C.instagram;
+  function isFit() { return !C.notAFit.some(function (r) { return st.a[r.question] === r.answer; }); }
 
   function progress() {
     var n = QUESTIONS.length, i = st.done ? n : st.i;
     $('.qz-bar i', qz).style.setProperty('--p', (i / n * 100) + '%');
     $('.qz-count', qz).textContent = st.done ? '' : (i + 1) + '/' + n;
-    var bk = $('.qz-back', qz); bk.setAttribute('aria-label', st.done ? 'Back to my answers' : (i === 0 ? 'Back to the page' : 'Back'));
+    var bk = $('.qz-back', qz); bk.setAttribute('aria-label', st.done ? (st.view === 'book' || st.view === 'text' ? 'Back' : 'Back to my answers') : (i === 0 ? 'Back to the page' : 'Back'));
   }
   function render() {
     progress();
-    if (st.done) return renderBooking();
+    if (st.done) return st.view === 'fit' ? renderFit() : st.view === 'nofit' ? renderNoFit() : st.view === 'text' ? renderText() : renderBooking();
     var Q = QUESTIONS[st.i], v = st.a[Q.id] || '', html;
     if (Q.type === 'choice') {
       html = '<div class="qz-step"><h2 class="qz-q" id="qz-title">' + esc(Q.q) + '</h2><div class="qz-opts" role="group" aria-labelledby="qz-title">' +
@@ -263,29 +312,80 @@ var QUESTIONS = [
   }
   function next() { if (st.i < QUESTIONS.length - 1) { st.i++; save(); render(); } }
   function back() {
+    if (st.done && (st.view === 'book' || st.view === 'text')) { st.view = 'fit'; save(); render(); return; }
     if (st.done) { st.done = false; st.i = QUESTIONS.length - 1; save(); render(); return; }
     if (st.i > 0) { st.i--; save(); render(); } else close();
   }
 
-  function send(f) {
-    var btn = $('button[type="submit"]', f), a = st.a;
-    btn.disabled = true; btn.firstChild.textContent = 'Sending...';
-    var fields = {
-      subject: 'New Closed application: ' + a.name + (attr.ref ? ' (ref: ' + attr.ref + ')' : ''),
-      name: a.name, doing_for_money: a.doing, making_a_month: a.income, wants_in_6_months: a.goal,
+  /* everything in one submission. path is book, text or unqualified, and empty until a fit applicant picks */
+  function details(subject, path, phone) {
+    var a = st.a, f = { subject: subject, name: a.name, qualified: isFit() ? 'yes' : 'no', path: path };
+    if (phone) f.phone = phone;
+    var rest = {
+      doing_for_money: a.doing, making_a_month: a.income, wants_in_6_months: a.goal,
       hours_a_week: a.hours, why_now: a.why, instagram: '@' + a.ig, instagram_link: 'https://instagram.com/' + a.ig,
       ref: attr.ref || 'none', utm_source: attr.utm_source || '', utm_medium: attr.utm_medium || '', utm_campaign: attr.utm_campaign || '',
       utm_content: attr.utm_content || '', utm_term: attr.utm_term || '', landing_page: attr.landing || '',
       submitted: new Date().toLocaleString('en-US', { timeZone: 'America/Chicago' }) + ' Central'
     };
-    var booking = function () { st.done = true; st.i = QUESTIONS.length - 1; save(); track('lead'); render(); };
-    deliver(fields).then(function () {
-      try { localStorage.removeItem(PENDING); } catch (e) { }
-      booking();
-    }, function (err) {
-      if (window.console) console.error('Closed application not sent yet, saved to resend:', err && err.message);
-      store.set(PENDING, fields); booking();
+    Object.keys(rest).forEach(function (k) { f[k] = rest[k]; });
+    return f;
+  }
+  function send(f) {
+    var btn = $('button[type="submit"]', f), a = st.a, fit = isFit();
+    btn.disabled = true; btn.firstChild.textContent = 'Sending...';
+    var fields = details('New Closed application: ' + a.name + (attr.ref ? ' (ref: ' + attr.ref + ')' : ''), fit ? '' : 'unqualified');
+    submit('application', fields).then(function () {
+      st.done = true; st.view = fit ? 'fit' : 'nofit'; st.sent = {}; st.i = QUESTIONS.length - 1; save(); track('lead'); render();
     });
+  }
+  function choose(path) {
+    st.view = path; save(); render();
+    if (path === 'book' && !st.sent.book) {
+      st.sent.book = true; save();
+      submit('book', details('Chose to book: ' + st.a.name + ' (@' + st.a.ig + ')', 'book'));
+    }
+  }
+
+  function renderFit() {
+    var go = function (path, label) { return '<button type="button" class="btn btn-lg" data-go="' + path + '">' + label + '<svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></button>'; };
+    body.innerHTML = '<div class="qz-step"><h2 class="qz-q" id="qz-title">Based on your answers, this looks like a fit. <span class="gold">Are you ready to take this seriously?</span></h2>' +
+      '<div class="qz-go">' + go('book', 'Yes, let\'s book my call') + go('text', 'Yes, but text me first') + '</div>' +
+      backBtn('Back to my answers') + '</div>';
+  }
+
+  function renderNoFit() {
+    var name = st.a.name ? ', ' + esc(st.a.name) : '';
+    body.innerHTML = '<div class="qz-step"><h2 class="qz-q" id="qz-title">Doesn\'t look like this is the right fit right now.</h2>' +
+      '<p class="qz-copy">Thanks for being real with your answers' + name + '. Based on what you shared, I don\'t think the roster is the right move for you at this moment, and I\'d rather tell you that than waste your time. That can change. If you still want to talk it through, message me on Instagram and I\'ll get back to you.</p>' +
+      '<a class="btn btn-lg qz-dm" href="' + esc(dm) + '" target="_blank" rel="noopener">Message me on Instagram<svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>' +
+      '<button type="button" class="qz-link" data-home>Back to the page</button></div>';
+  }
+
+  function renderText() {
+    body.innerHTML = '<form class="qz-step" novalidate><label class="qz-q" id="qz-title" for="qz-in">Easy. What\'s the best number to text you?</label>' +
+      '<div class="qz-field"><input class="qz-input" id="qz-in" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(214) 555-0123" value="' + esc(st.phone || '') + '" maxlength="20" aria-describedby="qz-fine qz-err" required></div>' +
+      '<p class="qz-fine" id="qz-fine">By submitting, you agree to get texts from Closed about your application. Reply STOP anytime.</p>' +
+      '<p class="qz-err" id="qz-err" role="alert"></p>' +
+      '<button class="btn" type="submit">Text me<svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></button>' +
+      backBtn() + '</form>';
+    var f = $('form', body), inp = $('#qz-in', body);
+    inp.addEventListener('input', function () { st.phone = inp.value; save(); $('#qz-err', body).textContent = ''; });
+    f.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var d = inp.value.replace(/\D/g, '');
+      if (d.length === 11 && d.charAt(0) === '1') d = d.slice(1);
+      var err = !d ? 'This one is required.' : /^[2-9]\d{2}[2-9]\d{6}$/.test(d) ? '' : "That doesn't look like a US number. Use 10 digits, like (214) 555-0123.";
+      if (err) { $('#qz-err', body).textContent = err; inp.setAttribute('aria-invalid', 'true'); inp.focus(); return; }
+      inp.removeAttribute('aria-invalid');
+      var phone = '(' + d.slice(0, 3) + ') ' + d.slice(3, 6) + '-' + d.slice(6);
+      inp.value = st.phone = phone; save();
+      var btn = $('button[type="submit"]', f); btn.disabled = true; btn.firstChild.textContent = 'Sending...';
+      var thanks = function () { location.href = '/closed/booked/?via=text'; };
+      if (st.sent.text === phone) return thanks();
+      submit('text', details('TEXT ME FIRST: ' + st.a.name + ' (@' + st.a.ig + ')', 'text', phone)).then(function () { st.sent.text = phone; save(); thanks(); });
+    });
+    setTimeout(function () { inp.focus(); }, 60);
   }
 
   function renderBooking() {
@@ -299,11 +399,11 @@ var QUESTIONS = [
       (inApp ? '' : btn) +
       '<div class="bk-confirm"><p>Picked a time? Tap this so I know you\'re locked in.</p><a class="btn btn-lg" href="/closed/booked/">I booked my call<svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></a></div>' +
       '<div class="bk-after"><h3>After you book</h3><ul class="list">' + pre + '<li>Show up on time.</li><li>Be somewhere quiet.</li><li>Come with questions.</li></ul></div>' +
-      backBtn('Back to my answers') + '</div>';
+      backBtn() + '</div>';
   }
 
   function open() {
-    st = store.get(KEY) || st; render();
+    st = load(store.get(KEY) || st); render();
     if (typeof qz.showModal === 'function') qz.showModal(); else qz.setAttribute('open', '');
     doc.documentElement.classList.add('lock'); dockState();
   }
@@ -311,7 +411,12 @@ var QUESTIONS = [
   qz.addEventListener('close', function () { doc.documentElement.classList.remove('lock'); dockState(); });
   $('.qz-x', qz).addEventListener('click', close);
   $('.qz-back', qz).addEventListener('click', back);
-  body.addEventListener('click', function (e) { if (e.target.closest('.qz-prev')) back(); });
+  body.addEventListener('click', function (e) {
+    var go = e.target.closest('[data-go]');
+    if (go) choose(go.getAttribute('data-go'));
+    else if (e.target.closest('.qz-prev')) back();
+    else if (e.target.closest('[data-home]')) close();
+  });
   $$('[data-apply]').forEach(function (b) { b.addEventListener('click', open); });
   if (location.hash === '#apply') open();
 })();
