@@ -287,8 +287,6 @@ h1,h2,.h3-disp{font-family:var(--sans);font-weight:700;text-transform:lowercase;
 .qz-input{width:100%;min-height:58px;padding:0 18px;border:1px solid var(--line-2);border-radius:16px;background:var(--card);color:var(--text);font:500 18px/1.3 var(--sans)}
 textarea.qz-input{min-height:140px;padding:15px 18px;resize:vertical}
 .qz-input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(214,174,82,.18)}
-.qz-at .qz-input{padding-left:40px}
-.qz-at::before{content:"@";position:absolute;left:18px;top:17px;font:500 18px/1.3 var(--sans);color:var(--mute)}
 .qz-opts{display:grid;gap:10px;margin-top:24px}
 .qz-opt{display:flex;align-items:center;justify-content:space-between;min-height:58px;padding:0 18px;border:1px solid var(--line-2);border-radius:16px;background:var(--card);font:500 17px/1.2 var(--sans);text-align:left;transition:border-color .15s,background-color .15s}
 .qz-opt .ic{opacity:0;color:var(--gold-2)}
@@ -300,23 +298,26 @@ textarea.qz-input{min-height:140px;padding:15px 18px;resize:vertical}
 .qz-prev .ic{width:17px;height:17px}
 .qz-err{min-height:1.3em;margin-top:10px;font-size:14px;color:#FF8A73}
 .qz-step .btn{width:100%;margin-top:14px}
-/* after the last question: the fit screen, the text-me form and the not-a-fit screen */
-.qz-go{margin-top:12px}
+/* after the last question: analyzing, the fit screen and the not-a-fit screen */
+.qz-load{display:grid;place-items:center;align-content:center;gap:26px;min-height:56svh;text-align:center}
+.qz-spin{width:54px;height:54px;border:3px solid rgba(214,174,82,.18);border-top-color:var(--gold-2);border-radius:50%;animation:qz-spin .9s linear infinite}
+@keyframes qz-spin{to{transform:rotate(360deg)}}
+.qz-fit{display:flex;align-items:center;gap:10px;margin-bottom:22px;padding:14px 16px;border:1px solid rgba(214,174,82,.45);border-radius:16px;
+  background:radial-gradient(120% 140% at 50% 0%,rgba(214,174,82,.14),transparent 60%),var(--card);font:600 15.5px/1.35 var(--sans);color:var(--gold-2)}
+.qz-fit .ic{flex:none;width:20px;height:20px;stroke-width:2.4}
+.qz-fields{display:grid;gap:10px;margin-top:22px}
+.qz-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.qz-pair .qz-input{min-width:0}
+.qz-input[aria-invalid="true"]{border-color:#FF8A73}
 .qz-copy{margin-top:14px;font-size:16.5px;line-height:1.55;color:var(--soft)}
 .qz-step .qz-dm{margin-top:24px}
-.qz-fine{margin-top:10px;font-size:13px;line-height:1.45;color:var(--mute)}
 .bk-frame{display:block;width:100%;height:min(720px,76svh);margin-top:18px;border:0;border-radius:18px;background:#fff}
 .bk-alt{margin-top:12px}
-.bk-note{margin-top:8px;font-size:13.5px;color:var(--mute);text-align:center}
 .bk-after{margin-top:22px;padding:18px 20px;border:1px solid var(--line);border-radius:18px;background:var(--card)}
 .bk-after h3{font:600 17px/1.2 var(--sans);letter-spacing:-.01em}
 .list{margin-top:10px}
 .list li{position:relative;padding:6px 0 6px 22px;color:var(--soft)}
 .list li::before{content:"";position:absolute;left:4px;top:15px;width:7px;height:7px;border-radius:50%;background:var(--gold-2)}
-.bk-confirm{margin-top:18px;padding:18px;border:1px solid rgba(214,174,82,.45);border-radius:20px;text-align:center;
-  background:radial-gradient(120% 140% at 50% 0%,rgba(214,174,82,.14),transparent 60%),var(--card)}
-.bk-confirm p{font:500 15px/1.4 var(--sans);color:var(--text)}
-.bk-confirm .btn{width:100%;margin-top:12px}
 
 /* ---------- booked and privacy pages ---------- */
 .page{padding:40px 0 72px}
@@ -328,9 +329,6 @@ textarea.qz-input{min-height:140px;padding:15px 18px;resize:vertical}
 .vid{position:relative;width:100%;aspect-ratio:16/9;margin-top:16px;overflow:hidden;border:1px solid var(--line);border-radius:18px;background:#000}
 .vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .vid-tall{max-width:380px;aspect-ratio:9/16}
-/* the booked page has two versions: booked (default) and ?via=text */
-.only-text,.via-text .only-book{display:none}
-.via-text .only-text{display:block}
 .page .foot,.foot{text-align:center}
 
 @media (prefers-reduced-motion:reduce){

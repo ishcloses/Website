@@ -9,8 +9,9 @@ var CONFIG = {
     doorsClose: 'Monday, Dec 7'         // when applications for this cohort close
   },
   booking: {
-    link: 'https://calendar.app.google/cDBpxXE37ATK8RDN8',
-    embed: 'https://calendar.google.com/calendar/appointments/schedules/AcZssZ15-eXbX8qXRTHMDjIa-7qFMv2QrBXkT9YBua8ofGfaePBWQ4jOoU6MEOjhF6Ekhv-MK-xx-vrY?gv=true'
+    // The Calendly event. The calendar fills in their name, email and phone, and sends them to the booked page once they book.
+    link: 'https://calendly.com/ishcloses/30min',
+    phoneQuestion: 'a1'   // where Phone Number sits in the event's questions (a1 = first). Change it if you reorder them in Calendly.
   },
   form: {
     // Applications go to Netlify Forms first (built into the hosting, see the hidden form at the bottom of index.html).
@@ -35,13 +36,11 @@ var CONFIG = {
 };
 
 var QUESTIONS = [
-  { id: 'name', type: 'text', q: "What's your first name?", ph: 'First name', auto: 'given-name' },
   { id: 'doing', type: 'choice', q: 'What are you doing for money right now?', options: ['9-to-5', 'Side hustle', 'Sales job', 'My own business', 'Student', 'Nothing right now'] },
   { id: 'income', type: 'choice', q: 'Roughly how much are you making a month?', options: ['Under $2k', '$2k to $4k', '$4k to $7k', '$7k+'] },
   { id: 'goal', type: 'text', q: 'How much do you want to be making in 6 months?', ph: 'e.g. $8k a month' },
   { id: 'hours', type: 'choice', q: 'How many hours a week can you put into this?', options: ['Under 10', '10 to 20', '20 to 30', '30+'] },
-  { id: 'why', type: 'long', q: 'Why now? What made you click this?', ph: 'Be specific.', hint: "Be specific. This is how I know you're serious and genuinely aware you need a change NOW." },
-  { id: 'ig', type: 'ig', q: "What's your Instagram?", ph: 'yourhandle', hint: "So I know who I'm talking to before the call." }
+  { id: 'why', type: 'long', q: 'Why now? What made you click this?', ph: 'Be specific.', hint: "Be specific. This is how I know you're serious and genuinely aware you need a change NOW." }
 ];
 
 (function () {
@@ -92,7 +91,7 @@ var QUESTIONS = [
   loadPixels();
 
   /* ---------- sending to the inbox: Netlify Forms, then FormSubmit as the backup ----------
-     Three kinds share the one form: the application, "chose to book" and "text me first".
+     One application per person, sent when they tap View available times.
      If both services are down the applicant carries on anyway. Whatever didn't send waits in this
      browser and goes out again the next time any Closed page opens (the booked page is the next one). */
   var PENDING = 'closed-pending', KEY = 'closed-app-v1';
@@ -104,7 +103,7 @@ var QUESTIONS = [
   function viaNetlify(f) {
     var b = new URLSearchParams(); b.append('form-name', C.form.netlify);
     Object.keys(f).forEach(function (k) { b.append(k, f[k]); });
-    return post('/closed/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: b.toString() })
+    return post('/closed/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: b.toString(), keepalive: true })
       .then(function (r) { if (!r.ok) throw new Error('Netlify said ' + r.status); });
   }
   function viaBackup(f) {
@@ -124,10 +123,11 @@ var QUESTIONS = [
     var p = pending(); if (f) p[kind] = f; else delete p[kind];
     if (Object.keys(p).length) store.set(PENDING, p); else try { localStorage.removeItem(PENDING); } catch (e) { }
   }
+  /* saved here first and cleared once it lands, so it can go in the background without waiting on anyone */
   function submit(kind, f) {
-    return deliver(f).then(function () { settle(kind); }, function (err) {
+    settle(kind, f);
+    return deliver(f).then(function () { if (JSON.stringify(pending()[kind]) === JSON.stringify(f)) settle(kind); }, function (err) {
       if (window.console) console.error('Closed ' + kind + ' not sent yet, saved to resend:', err && err.message);
-      settle(kind, f);
     });
   }
   var waiting = pending();
@@ -138,14 +138,9 @@ var QUESTIONS = [
   /* a Google Drive share link (drive.google.com/file/d/FILE_ID/view) plays through Drive's own player */
   function driveId(url) { var m = /drive\.google\.com\/.*(?:\/d\/|[?&]id=)([\w-]{10,})/.exec(url || ''); return m && m[1]; }
 
-  /* ---------- the booked page: "You're booked" by default, "Got it" for ?via=text ---------- */
+  /* ---------- the booked page ---------- */
   if (page === 'booked') {
     track('schedule');
-    if (qs.get('via') === 'text') {
-      var who = ((store.get(KEY) || {}).a || {}).name;
-      $('#via-name').textContent = who ? ', ' + who : '';
-      doc.title = 'Got it | Closed';
-    }
     var v = $('#pre-video'), drive = driveId(C.preCallVideo);
     if (v && C.preCallVideo) {
       v.innerHTML = drive
@@ -236,12 +231,15 @@ var QUESTIONS = [
   }
 
   /* ---------- the application ---------- */
-  /* after the last question st.view is where they are: fit, nofit, book (the calendar) or text (the text-me form) */
-  var qz = $('#apply'), body = $('#qz-body');
+  /* after the last question st.view is where they are: fit (the contact form), nofit or book (the calendar) */
+  var qz = $('#apply'), body = $('#qz-body'), busy = false;
+  var NAME = /^[\p{L}' .-]{1,40}$/u;
   function load(s) {
     s = s || { i: 0, a: {}, done: false };
     if (s.done && !s.view) s.view = 'book';   // applications from before the fit screen go straight to the calendar
-    s.sent = s.sent || {};
+    if (s.view === 'text') s.view = 'fit';
+    s.i = Math.min(s.i || 0, QUESTIONS.length - 1);   // the quiz got shorter, so older saves land on a real question
+    if (typeof s.sent !== 'string') s.sent = '';
     return s;
   }
   var st = load(store.get(KEY));
@@ -255,11 +253,12 @@ var QUESTIONS = [
     var n = QUESTIONS.length, i = st.done ? n : st.i;
     $('.qz-bar i', qz).style.setProperty('--p', (i / n * 100) + '%');
     $('.qz-count', qz).textContent = st.done ? '' : (i + 1) + '/' + n;
-    var bk = $('.qz-back', qz); bk.setAttribute('aria-label', st.done ? (st.view === 'book' || st.view === 'text' ? 'Back' : 'Back to my answers') : (i === 0 ? 'Back to the page' : 'Back'));
+    var bk = $('.qz-back', qz); bk.setAttribute('aria-label', st.done ? (st.view === 'book' ? 'Back' : 'Back to my answers') : (i === 0 ? 'Back to the page' : 'Back'));
   }
   function render() {
+    if (busy) return renderLoading();
     progress();
-    if (st.done) return st.view === 'fit' ? renderFit() : st.view === 'nofit' ? renderNoFit() : st.view === 'text' ? renderText() : renderBooking();
+    if (st.done) return st.view === 'fit' ? renderFit() : st.view === 'nofit' ? renderNoFit() : renderBooking();
     var Q = QUESTIONS[st.i], v = st.a[Q.id] || '', html;
     if (Q.type === 'choice') {
       html = '<div class="qz-step"><h2 class="qz-q" id="qz-title">' + esc(Q.q) + '</h2><div class="qz-opts" role="group" aria-labelledby="qz-title">' +
@@ -279,13 +278,13 @@ var QUESTIONS = [
     var last = st.i === QUESTIONS.length - 1;
     var field = Q.type === 'long'
       ? '<textarea class="qz-input" id="qz-in" name="' + Q.id + '" placeholder="' + esc(Q.ph) + '" maxlength="800" required>' + esc(v) + '</textarea>'
-      : '<input class="qz-input" id="qz-in" name="' + Q.id + '" type="text" placeholder="' + esc(Q.ph) + '" value="' + esc(v) + '" maxlength="' + (Q.type === 'ig' ? 31 : 80) + '"' +
-        (Q.auto ? ' autocomplete="' + Q.auto + '"' : ' autocomplete="off"') + (Q.type === 'ig' ? ' autocapitalize="none" autocorrect="off" spellcheck="false"' : '') + ' required>';
+      : '<input class="qz-input" id="qz-in" name="' + Q.id + '" type="text" placeholder="' + esc(Q.ph) + '" value="' + esc(v) + '" maxlength="80"' +
+        (Q.auto ? ' autocomplete="' + Q.auto + '"' : ' autocomplete="off"') + ' required>';
     body.innerHTML = '<form class="qz-step" novalidate><label class="qz-q" id="qz-title" for="qz-in">' + esc(Q.q) + '</label>' +
       (Q.hint ? '<p class="qz-hint">' + esc(Q.hint) + '</p>' : '') +
-      '<div class="qz-field' + (Q.type === 'ig' ? ' qz-at' : '') + '">' + field + '</div>' +
+      '<div class="qz-field">' + field + '</div>' +
       '<p class="qz-err" id="qz-err" role="alert"></p>' +
-      '<button class="btn" type="submit">' + (last ? 'Submit my application' : 'OK') + '<svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></button>' +
+      '<button class="btn" type="submit">' + (last ? 'Next' : 'OK') + '<svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></button>' +
       backBtn() + '</form>';
     var f = $('form', body), inp = $('#qz-in', body);
     inp.setAttribute('aria-describedby', 'qz-err');
@@ -294,15 +293,12 @@ var QUESTIONS = [
     f.addEventListener('submit', function (e) {
       e.preventDefault();
       var val = inp.value.trim().replace(/\s+/g, ' '), err = '';
-      if (Q.type === 'ig') val = val.replace(/^@+/, '').replace(/^https?:\/\/(www\.)?instagram\.com\//i, '').replace(/[/?].*$/, '');
       if (!val) err = Q.id === 'why' ? "Tell me a little, even one line works." : 'This one is required.';
-      else if (Q.id === 'name' && !/^[\p{L}' .-]{1,40}$/u.test(val)) err = 'Just your first name, letters only.';
-      else if (Q.type === 'ig' && !/^[A-Za-z0-9._]{1,30}$/.test(val)) err = "That doesn't look like an Instagram handle. Letters, numbers, dots and underscores only.";
       else if (Q.id === 'why' && val.length < 3) err = 'Give me a bit more than that.';
       if (err) { $('#qz-err', body).textContent = err; inp.setAttribute('aria-invalid', 'true'); inp.focus(); return; }
       inp.removeAttribute('aria-invalid');
       st.a[Q.id] = val; save();
-      if (last) send(f); else next();
+      if (last) analyze(); else next();
     });
     setTimeout(function () { inp.focus(); }, 60);
   }
@@ -312,46 +308,72 @@ var QUESTIONS = [
   }
   function next() { if (st.i < QUESTIONS.length - 1) { st.i++; save(); render(); } }
   function back() {
-    if (st.done && (st.view === 'book' || st.view === 'text')) { st.view = 'fit'; save(); render(); return; }
+    if (busy) return;
+    if (st.done && st.view === 'book') { st.view = 'fit'; save(); render(); return; }
     if (st.done) { st.done = false; st.i = QUESTIONS.length - 1; save(); render(); return; }
     if (st.i > 0) { st.i--; save(); render(); } else close();
   }
 
-  /* everything in one submission. path is book, text or unqualified, and empty until a fit applicant picks */
-  function details(subject, path, phone) {
-    var a = st.a, f = { subject: subject, name: a.name, qualified: isFit() ? 'yes' : 'no', path: path };
-    if (phone) f.phone = phone;
-    var rest = {
-      doing_for_money: a.doing, making_a_month: a.income, wants_in_6_months: a.goal,
-      hours_a_week: a.hours, why_now: a.why, instagram: '@' + a.ig, instagram_link: 'https://instagram.com/' + a.ig,
+  /* everything in the one submission, sent when a fit applicant taps View available times */
+  function fullName() { return [st.a.name, st.a.last].join(' ').replace(/\s+/g, ' ').trim(); }
+  function details(subject) {
+    var a = st.a;
+    return {
+      subject: subject, name: fullName(), email: a.email, phone: a.phone,
+      doing_for_money: a.doing, making_a_month: a.income, wants_in_6_months: a.goal, hours_a_week: a.hours, why_now: a.why,
       ref: attr.ref || 'none', utm_source: attr.utm_source || '', utm_medium: attr.utm_medium || '', utm_campaign: attr.utm_campaign || '',
       utm_content: attr.utm_content || '', utm_term: attr.utm_term || '', landing_page: attr.landing || '',
       submitted: new Date().toLocaleString('en-US', { timeZone: 'America/Chicago' }) + ' Central'
     };
-    Object.keys(rest).forEach(function (k) { f[k] = rest[k]; });
-    return f;
   }
-  function send(f) {
-    var btn = $('button[type="submit"]', f), a = st.a, fit = isFit();
-    btn.disabled = true; btn.firstChild.textContent = 'Sending...';
-    var fields = details('New Closed application: ' + a.name + (attr.ref ? ' (ref: ' + attr.ref + ')' : ''), fit ? '' : 'unqualified');
-    submit('application', fields).then(function () {
-      st.done = true; st.view = fit ? 'fit' : 'nofit'; st.sent = {}; st.i = QUESTIONS.length - 1; save(); track('lead'); render();
-    });
+  /* "Analyzing answers" for a moment after the last question, then the fit or not-a-fit screen. Nothing is sent yet. */
+  function analyze() {
+    busy = true; render();
+    setTimeout(function () { busy = false; st.done = true; st.view = isFit() ? 'fit' : 'nofit'; st.sent = ''; st.i = QUESTIONS.length - 1; save(); render(); }, 1500);
   }
-  function choose(path) {
-    st.view = path; save(); render();
-    if (path === 'book' && !st.sent.book) {
-      st.sent.book = true; save();
-      submit('book', details('Chose to book: ' + st.a.name + ' (@' + st.a.ig + ')', 'book'));
-    }
+
+  function renderLoading() {
+    $('.qz-bar i', qz).style.setProperty('--p', '100%'); $('.qz-count', qz).textContent = '';
+    body.innerHTML = '<div class="qz-step qz-load" role="status"><span class="qz-spin" aria-hidden="true"></span><h2 class="qz-q" id="qz-title">Analyzing answers</h2></div>';
   }
 
   function renderFit() {
-    var go = function (path, label) { return '<button type="button" class="btn btn-lg" data-go="' + path + '">' + label + '<svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></button>'; };
-    body.innerHTML = '<div class="qz-step"><h2 class="qz-q" id="qz-title">Based on your answers, this looks like a fit. <span class="gold">Are you ready to take this seriously?</span></h2>' +
-      '<div class="qz-go">' + go('book', 'Yes, let\'s book my call') + go('text', 'Yes, but text me first') + '</div>' +
-      backBtn('Back to my answers') + '</div>';
+    var a = st.a;
+    var input = function (id, ph, type, auto, v) {
+      return '<input class="qz-input" id="qz-' + id + '" name="' + id + '" type="' + type + '" placeholder="' + ph + '" aria-label="' + ph + '" autocomplete="' + auto + '" value="' + esc(v || '') + '" maxlength="' + (type === 'email' ? 120 : type === 'tel' ? 20 : 40) + '"' +
+        (type === 'email' ? ' autocapitalize="none" spellcheck="false"' : type === 'tel' ? ' inputmode="tel"' : '') + ' aria-describedby="qz-err" required>';
+    };
+    body.innerHTML = '<form class="qz-step" novalidate>' +
+      '<p class="qz-fit"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Based on your answers, this looks like a fit.</p>' +
+      '<h2 class="qz-q" id="qz-title">Grab a time with me</h2>' +
+      '<div class="qz-fields"><div class="qz-pair">' + input('first', 'First name', 'text', 'given-name', a.name) + input('last', 'Last name', 'text', 'family-name', a.last) + '</div>' +
+      input('email', 'Email', 'email', 'email', a.email) + input('phone', 'Phone number', 'tel', 'tel-national', a.phone) + '</div>' +
+      '<p class="qz-err" id="qz-err" role="alert"></p>' +
+      '<button class="btn btn-lg" type="submit">View available times<svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></button></form>';
+    var f = $('form', body), keys = { first: 'name', last: 'last', email: 'email', phone: 'phone' };
+    Object.keys(keys).forEach(function (id) {
+      $('#qz-' + id, body).addEventListener('input', function (e) { a[keys[id]] = e.target.value; save(); $('#qz-err', body).textContent = ''; e.target.removeAttribute('aria-invalid'); });
+    });
+    f.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var val = function (id) { return $('#qz-' + id, body).value.trim().replace(/\s+/g, ' '); };
+      var first = val('first'), last = val('last'), email = val('email'), digits = val('phone').replace(/\D/g, ''), bad = '', err = '';
+      if (digits.length === 11 && digits.charAt(0) === '1') digits = digits.slice(1);
+      if (!NAME.test(first)) { bad = 'first'; err = first ? 'Just your first name, letters only.' : "What's your first name?"; }
+      else if (!NAME.test(last)) { bad = 'last'; err = last ? 'Just your last name, letters only.' : "What's your last name?"; }
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { bad = 'email'; err = email ? "That doesn't look like an email." : "What's your email?"; }
+      else if (!/^[2-9]\d{2}[2-9]\d{6}$/.test(digits)) { bad = 'phone'; err = digits ? "That doesn't look like a US number. Use 10 digits, like (214) 555-0123." : "What's your phone number?"; }
+      if (err) { $('#qz-err', body).textContent = err; $('#qz-' + bad, body).setAttribute('aria-invalid', 'true'); $('#qz-' + bad, body).focus(); return; }
+      a.name = first; a.last = last; a.email = email; a.phone = '(' + digits.slice(0, 3) + ') ' + digits.slice(3, 6) + '-' + digits.slice(6); save();
+      // the calendar opens straight away and the application sends in the background. Same details twice = no second email.
+      var key = [first, last, email, a.phone].join('|');
+      if (st.sent !== key) {
+        submit('application', details('New Closed application: ' + fullName() + (attr.ref ? ' (ref: ' + attr.ref + ')' : '')));
+        st.sent = key; track('lead');
+      }
+      st.view = 'book'; save(); render();
+    });
+    if (!a.name) setTimeout(function () { $('#qz-first', body).focus(); }, 60);
   }
 
   function renderNoFit() {
@@ -362,45 +384,32 @@ var QUESTIONS = [
       '<button type="button" class="qz-link" data-home>Back to the page</button></div>';
   }
 
-  function renderText() {
-    body.innerHTML = '<form class="qz-step" novalidate><label class="qz-q" id="qz-title" for="qz-in">Easy. What\'s the best number to text you?</label>' +
-      '<div class="qz-field"><input class="qz-input" id="qz-in" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(214) 555-0123" value="' + esc(st.phone || '') + '" maxlength="20" aria-describedby="qz-fine qz-err" required></div>' +
-      '<p class="qz-fine" id="qz-fine">By submitting, you agree to get texts from Closed about your application. Reply STOP anytime.</p>' +
-      '<p class="qz-err" id="qz-err" role="alert"></p>' +
-      '<button class="btn" type="submit">Text me<svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></button>' +
-      backBtn() + '</form>';
-    var f = $('form', body), inp = $('#qz-in', body);
-    inp.addEventListener('input', function () { st.phone = inp.value; save(); $('#qz-err', body).textContent = ''; });
-    f.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var d = inp.value.replace(/\D/g, '');
-      if (d.length === 11 && d.charAt(0) === '1') d = d.slice(1);
-      var err = !d ? 'This one is required.' : /^[2-9]\d{2}[2-9]\d{6}$/.test(d) ? '' : "That doesn't look like a US number. Use 10 digits, like (214) 555-0123.";
-      if (err) { $('#qz-err', body).textContent = err; inp.setAttribute('aria-invalid', 'true'); inp.focus(); return; }
-      inp.removeAttribute('aria-invalid');
-      var phone = '(' + d.slice(0, 3) + ') ' + d.slice(3, 6) + '-' + d.slice(6);
-      inp.value = st.phone = phone; save();
-      var btn = $('button[type="submit"]', f); btn.disabled = true; btn.firstChild.textContent = 'Sending...';
-      var thanks = function () { location.href = '/closed/booked/?via=text'; };
-      if (st.sent.text === phone) return thanks();
-      submit('text', details('TEXT ME FIRST: ' + st.a.name + ' (@' + st.a.ig + ')', 'text', phone)).then(function () { st.sent.text = phone; save(); thanks(); });
-    });
-    setTimeout(function () { inp.focus(); }, 60);
+  /* the Calendly link with what they typed on the fit screen already filled in */
+  function calendly(embed) {
+    var a = st.a, p = [];
+    var add = function (k, v) { if (v) p.push(k + '=' + encodeURIComponent(v)); };
+    if (embed) { add('embed_domain', location.hostname); add('embed_type', 'Inline'); add('hide_event_type_details', '1'); add('hide_gdpr_banner', '1'); }
+    add('name', fullName()); add('email', a.email);
+    if (a.phone) add(C.booking.phoneQuestion, '+1' + a.phone.replace(/\D/g, ''));
+    return C.booking.link + (C.booking.link.indexOf('?') > -1 ? '&' : '?') + p.join('&');
   }
-
   function renderBooking() {
     var name = st.a.name ? esc(st.a.name) + ', your' : 'Your';
-    var btn = '<a class="btn' + (inApp ? '' : ' btn-ghost') + ' bk-alt" href="' + esc(C.booking.link) + '" target="_blank" rel="noopener">' + (inApp ? 'Book your call' : 'Calendar not loading? Open it here') + '</a>';
     var pre = C.preCallVideo ? '<li>Watch <a href="' + esc(C.preCallVideo) + '" target="_blank" rel="noopener">this short video</a> before the call.</li>' : '';
     body.innerHTML = '<div class="qz-step"><h2 class="qz-q" id="qz-title">Last step, pick a time with me</h2>' +
       '<p class="qz-hint">' + name + ' application is in. Grab a time that works below.</p>' +
-      (inApp ? btn + '<p class="bk-note">Calendar not loading in this app? Tap the button.</p>' : '') +
-      '<iframe class="bk-frame" src="' + esc(C.booking.embed) + '" title="Book a call with Ismail" loading="lazy"></iframe>' +
-      (inApp ? '' : btn) +
-      '<div class="bk-confirm"><p>Picked a time? Tap this so I know you\'re locked in.</p><a class="btn btn-lg" href="/closed/booked/">I booked my call<svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></a></div>' +
+      '<iframe class="bk-frame" src="' + esc(calendly(true)) + '" title="Book a call with Ismail"></iframe>' +
+      '<a class="btn btn-ghost bk-alt" href="' + esc(calendly(false)) + '" target="_blank" rel="noopener">Calendar not loading? Open it here</a>' +
       '<div class="bk-after"><h3>After you book</h3><ul class="list">' + pre + '<li>Show up on time.</li><li>Be somewhere quiet.</li><li>Come with questions.</li></ul></div>' +
       backBtn() + '</div>';
   }
+  // Calendly tells the page how tall it is (so the calendar grows instead of scrolling inside itself) and when a time is booked
+  addEventListener('message', function (e) {
+    if (e.origin !== 'https://calendly.com' || !e.data) return;
+    if (e.data.event === 'calendly.event_scheduled') location.href = '/closed/booked/';
+    var fr = $('.bk-frame', body), h = parseInt(e.data.payload && e.data.payload.height, 10);
+    if (e.data.event === 'calendly.page_height' && fr && h > 400) fr.style.height = h + 'px';
+  });
 
   function open() {
     st = load(store.get(KEY) || st); render();
@@ -412,9 +421,7 @@ var QUESTIONS = [
   $('.qz-x', qz).addEventListener('click', close);
   $('.qz-back', qz).addEventListener('click', back);
   body.addEventListener('click', function (e) {
-    var go = e.target.closest('[data-go]');
-    if (go) choose(go.getAttribute('data-go'));
-    else if (e.target.closest('.qz-prev')) back();
+    if (e.target.closest('.qz-prev')) back();
     else if (e.target.closest('[data-home]')) close();
   });
   $$('[data-apply]').forEach(function (b) { b.addEventListener('click', open); });
