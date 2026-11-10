@@ -1,6 +1,6 @@
 /* Closed: landing page, application quiz and booking step.
    Everything you'll want to change lives in SPOTS_LEFT and CONFIG right below. */
-var SPOTS_LEFT = 15;   // spots still open. Shown as "15 spots left" above the last button. Change it by hand as people join.
+var SPOTS_LEFT = 9;   // spots still open. Shown as "9 spots left" above the last button. Change it by hand as people join.
 var CONFIG = {
   cohort: {
     start: '2026-12-07T00:00:00-06:00',   // Monday, Dec 7, 12:00 AM Central (Dallas). The countdown runs to this.
