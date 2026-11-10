@@ -1,5 +1,6 @@
 /* Closed: landing page, application quiz and booking step.
-   Everything you'll want to change lives in CONFIG right below. */
+   Everything you'll want to change lives in SPOTS_LEFT and CONFIG right below. */
+var SPOTS_LEFT = 15;   // spots still open. Shown as "15 spots left" above the last button. Change it by hand as people join.
 var CONFIG = {
   cohort: {
     start: '2026-12-07T00:00:00-06:00',   // Monday, Dec 7, 12:00 AM Central (Dallas). The countdown runs to this.
@@ -159,7 +160,7 @@ var QUESTIONS = [
   if (page !== 'home') return;
 
   /* ---------- config text ---------- */
-  var labels = { cohortLong: C.cohort.long, cohortShort: C.cohort.short, spots: C.cohort.spots, doorsClose: C.cohort.doorsClose };
+  var labels = { cohortLong: C.cohort.long, cohortShort: C.cohort.short, spots: C.cohort.spots, spotsLeft: String(SPOTS_LEFT), doorsClose: C.cohort.doorsClose };
   $$('[data-bind]').forEach(function (el) { var k = el.getAttribute('data-bind'); if (labels[k] != null) el.textContent = labels[k]; });
   function ctaText(t) { $$('[data-cta]').forEach(function (el) { el.textContent = t; }); }
   ctaText('join the roster');

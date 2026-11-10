@@ -19,7 +19,10 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,700;1,800&family=Geist:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,700;1,800&family=Geist:wght@400;500;600;700&display=swap"></noscript>
 <link rel="stylesheet" href="/closed/closed.css">
+<!-- turns the motion on. If fx.js never arrives, it turns itself back off so nothing stays hidden. -->
+<script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.classList.add("fx");setTimeout(function(){if(!window.closedFx)document.documentElement.classList.remove("fx")},4000)}</script>
 <script src="/closed/closed.js" defer></script>
+<script src="/closed/fx.js" defer></script>
 </head>
 <body data-page="home">
 <a class="skip" href="#main">Skip to the content</a>
@@ -45,14 +48,14 @@
   <symbol id="i-up" viewBox="0 0 24 24"><path d="M4 18l6-6 4 4 6-7M14 9h6v6"/></symbol>
 </svg>
 
-<!-- the Draft Day bar: date and spots live in the config at the top of closed.js -->
-<div class="bar" id="bar" role="region" aria-label="Draft Day">
-  <p class="bar-t"><span class="bar-msg"><span class="bar-l1"><span class="bar-k">Draft Day</span> <b data-bind="cohortLong">Monday, Dec 7</b></span> <span class="bar-l2"><span class="dot" aria-hidden="true">·</span> <span data-bind="spots">15</span> spots on the roster</span></span></p>
+<!-- the countdown bar: date and spots live in the config at the top of closed.js -->
+<div class="bar" id="bar" role="region" aria-label="Doors close countdown">
+  <p class="bar-t"><span class="bar-msg"><span class="bar-l1"><span class="bar-k">Doors close</span> <b data-bind="cohortShort">Dec 7</b></span> <span class="bar-l2"><span class="dot" aria-hidden="true">·</span> <span data-bind="spots">15</span> spots on the roster</span></span></p>
   <div class="cd" aria-hidden="true">
-    <span class="cd-u"><b data-cd="d">00</b><i>d</i></span>
-    <span class="cd-u"><b data-cd="h">00</b><i>h</i></span>
-    <span class="cd-u"><b data-cd="m">00</b><i>m</i></span>
-    <span class="cd-u"><b data-cd="s">00</b><i>s</i></span>
+    <span class="cd-u"><b data-cd="d">00</b><i>days</i></span>
+    <span class="cd-u"><b data-cd="h">00</b><i>hrs</i></span>
+    <span class="cd-u"><b data-cd="m">00</b><i>min</i></span>
+    <span class="cd-u"><b data-cd="s">00</b><i>sec</i></span>
   </div>
 </div>
 
@@ -66,16 +69,22 @@
 <main id="main">
 
   <!-- 1. the line -->
-  <section class="hero" id="hero">
+  <section class="hero live" id="hero">
+    <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
     <span class="jersey" aria-hidden="true" data-bind="spots">15</span>
     <div class="wrap hero-in">
-      <h1>We're not your mentor. <span class="gold">We're your agent.</span></h1>
+      <h1><span class="w" style="--i:0">We're</span> <span class="w" style="--i:1">not</span> <span class="w" style="--i:2">your</span> <span class="w" style="--i:3">mentor.</span> <span class="gold"><span class="w" style="--i:5">We're</span> <span class="w" style="--i:6">your</span> <span class="w" style="--i:7">agent.</span></span></h1>
       <p class="hero-sub">A small roster of hustlers we develop, place, train and move up. We only work with a few people at a time.</p>
       <div class="cta" id="hero-cta">
-        <button class="btn btn-lg" type="button" data-apply><span data-cta>join the roster</span><svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+        <button class="btn btn-lg btn-glow" type="button" data-apply><span class="btn-ring" aria-hidden="true"></span><span data-cta>join the roster</span><svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></button>
         <p class="cta-note">Takes 2 minutes. If you're a fit, you'll book a call with me.</p>
       </div>
-      <div class="guarantee">
+      <ul class="proof" aria-label="The numbers">
+        <li><b>$2M+</b><span>closed</span></li>
+        <li><b>100%</b><span>of roster placed</span></li>
+        <li><b>30-day</b><span>guarantee</span></li>
+      </ul>
+      <div class="guarantee gb">
         <span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg></span>
         <div>
           <p class="g-t">Our 30-day guarantee</p>
@@ -89,16 +98,16 @@
   <section class="agent" id="agent" aria-labelledby="agent-t">
     <div class="wrap agent-in">
       <figure class="agent-photo">
-        <img src="/closed/media/poster.webp" alt="Ismail and his partner Nizal" width="720" height="1280" loading="lazy" decoding="async">
-        <figcaption><span>Your agents</span>Ismail &amp; Nizal</figcaption>
+        <img src="/closed/media/poster.webp" alt="Nizal and Ismail" width="720" height="1280" loading="lazy" decoding="async">
+        <figcaption><span>Your agents</span>Nizal &amp; Ismail</figcaption>
       </figure>
       <div class="agent-copy">
-        <p class="eyebrow">Your agent</p>
-        <h2 id="agent-t">$1.13<span class="up">M</span>+ closed. <span class="gold">By 18.</span></h2>
+        <p class="eyebrow">About Ish</p>
+        <h2 id="agent-t">$<span data-count="2">2</span><span class="up">M</span>+ closed. <span class="gold">By 18.</span></h2>
         <p>Before sales, I was the kid filing patents and pitching VCs. At 17 I was knocking doors in the Texas heat selling insurance, detailing cars, doing ecom and trading. I tried everything. In short, I was a young hustler.</p>
         <p>But no matter how many businesses I tried, nothing was stable and nothing cracked the code. Nothing ever felt like the one that was going to make me a millionaire or get me to my goals.</p>
         <p>That changed when I found out about online high ticket sales. I bought a mentorship and gave it my all. Fast forward, I was the top rep every single time, to the point where I became a coach for other reps and started my own program.</p>
-        <p>By 18 I'd closed over $1.13M from my bedroom. That's when it clicked: sales is the one skill nobody can take from you. Sales was my &ldquo;escape.&rdquo;</p>
+        <p>By 18 I'd closed over $2M from my bedroom. That's when it clicked: sales is the one skill nobody can take from you. Sales was my &ldquo;escape.&rdquo;</p>
         <p>I built Closed because I kept seeing hungry people stuck in jobs that cap them. You don't need a degree or connections. You need the skill and someone in your corner. I built this so people who are woke, hustlers just like I was, actually have a chance to reach their dreams. And I want to be the one holding their hand through it.</p>
         <p class="agent-me">Now I do what an agent does: find you the right offer, get you signed and train you on it until you're the top rep there.</p>
       </div>
@@ -115,7 +124,7 @@
     <p class="wall-more">+ more students coached and placed</p>
     <div class="wrap wall-tools"><button class="wall-pp" id="wall-pp" type="button" aria-pressed="false">Pause the wall</button></div>
     <div class="wrap hundo">
-      <p class="hundo-n">100%</p>
+      <p class="hundo-n"><span data-count="100">100</span>%</p>
       <p class="hundo-l">of our roster so far has been placed, trained and is making money.</p>
       <p class="hundo-p">We plan to keep that number where it is as we grow. The goal is to be the most fulfilling sales placement and training program out there.</p>
     </div>
@@ -151,6 +160,7 @@
         <h2 id="ladder-t">Prospect to top rep <span class="gold">in 60 days.</span></h2>
         <p>We build your application with you, get you signed to a vetted offer, then train you on it until you're the top rep.</p>
       </div>
+      <div class="ladder-tl">
       <ol class="rungs">
         <li class="rung"><span class="rung-n">01</span><div class="rung-b"><p class="rung-days">Days 1 to 10</p><h3>Prospect</h3><p>You join the roster. You get sales training and the Identity Shift module, and we build your resume and Loom with you.</p><p class="rung-goal"><svg class="ic" aria-hidden="true"><use href="#i-flag"/></svg>Application ready in 14 days or less</p></div></li>
         <li class="rung"><span class="rung-n">02</span><div class="rung-b"><p class="rung-days">Around days 14 to 30</p><h3>Signed</h3><p>We put you in front of vetted offers from our job board and prep you for every interview.</p><p class="rung-goal"><svg class="ic" aria-hidden="true"><use href="#i-flag"/></svg>You're signed to a real offer</p></div></li>
@@ -158,6 +168,8 @@
         <li class="rung"><span class="rung-n">04</span><div class="rung-b"><p class="rung-days">Day 60</p><h3>Top Rep</h3><p>You're one of the best reps on your offer. That's the target for every person on the roster.</p></div></li>
         <li class="rung"><span class="rung-n">05</span><div class="rung-b"><p class="rung-days">After 60 days</p><h3>Transfer</h3><p>Once you're putting up numbers, we move you up: setter to closer, closer to better closer, smaller offer to bigger offer. We're right by you every step of the way.</p></div></li>
       </ol>
+      <div class="rail" aria-hidden="true"><i></i></div>
+      </div>
       <p class="ladder-note">These day ranges are conservative. Most of the roster moves faster.</p>
     </div>
   </section>
@@ -210,7 +222,7 @@
         <p>In plain English. You sign the full terms when you join. This is the summary.</p>
       </div>
       <div class="deal">
-        <div class="deal-side">
+        <div class="deal-side gb">
           <h3>What we promise you</h3>
           <ul class="deal-list">
             <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>We build your resume and Loom with you</li>
@@ -273,7 +285,9 @@
           <span class="board-u"><b data-cd="s">00</b><i>sec</i></span>
         </div>
         <p class="final-spots"><span data-bind="spots">15</span> spots on the roster.</p>
-        <div class="cta"><button class="btn btn-lg" type="button" data-apply><span data-cta>join the roster</span><svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></button></div>
+        <!-- spots left: change SPOTS_LEFT at the top of closed.js -->
+        <p class="left"><span class="left-dot" aria-hidden="true"></span><b data-bind="spotsLeft">15</b> spots left<span class="left-bar" aria-hidden="true"><i id="left-fill"></i></span></p>
+        <div class="cta"><button class="btn btn-lg btn-glow" type="button" data-apply><span class="btn-ring" aria-hidden="true"></span><span data-cta>join the roster</span><svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></button></div>
         <p class="final-g"><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg>Backed by our 30-day guarantee</p>
         <p class="final-note">Doors close <span data-bind="doorsClose">Monday, Dec 7</span>. The next draft isn't scheduled yet.</p>
       </div>
@@ -296,7 +310,7 @@
 </footer>
 
 <div class="dock" id="dock" aria-hidden="true">
-  <button class="btn btn-lg" type="button" data-apply tabindex="-1"><span data-cta>join the roster</span><svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+  <button class="btn btn-lg btn-glow" type="button" data-apply tabindex="-1"><span class="btn-ring" aria-hidden="true"></span><span data-cta>join the roster</span><svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></button>
 </div>
 
 <!-- the application: one question per screen, then the calendar -->
@@ -333,6 +347,7 @@
   {"student":"Muzz","stage":"Paid","date":"","line":"First $1k day of his life.","img":"muzz-4-1kday","w":560,"h":431},
   {"student":"Muzz","stage":"Paid","date":"","line":"$3k in 2.5 weeks, on pace for $6k in a slow month.","img":"muzz-5-3k","w":560,"h":279},
   {"student":"Muzz","stage":"Paid","date":"Sep 21","line":"$1k in 2 days.","img":"muzz-6-1k2days","w":560,"h":663},
+  {"student":"Muzz","stage":"Paid","date":"","line":"Made around 1.4K in comms in one day.","img":"muzz-7-comms","w":560,"h":218},
 
   {"student":"Ibrahim","stage":"Interview","date":"Jul 8","line":"First interview, 8 days in.","img":"ibrahim-1-interview","w":560,"h":750},
   {"student":"Ibrahim","stage":"Interview","date":"Jul 15","line":"Moved on to the group interview.","img":"ibrahim-2-group","w":560,"h":688},
@@ -348,7 +363,8 @@
 
   {"student":"Musa","stage":"Day one","date":"Apr 3","line":"4 activations his first day.","img":"more-musa","w":560,"h":274},
   {"student":"Gero","stage":"Leaderboard","date":"Feb 13","line":"Hit 8 and had us talking bonuses.","img":"more-gero","w":560,"h":427},
-  {"student":"Student","stage":"Closes","date":"","line":"3 closes in one day, then back on the dialer that night.","img":"more-3closes","w":560,"h":548}
+  {"student":"Student","stage":"Closes","date":"","line":"3 closes in one day, then back on the dialer that night.","img":"more-3closes","w":560,"h":548},
+  {"student":"Student","stage":"Cash","date":"","line":"Almost 100k cash collected in one day, around 2k in comms.","img":"more-100kday","w":560,"h":224}
 ]
 </script>
 </body>
