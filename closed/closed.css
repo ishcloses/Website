@@ -357,7 +357,6 @@ textarea.qz-input{min-height:140px;padding:15px 18px;resize:vertical}
    Rules under .fx only apply when motion is on (the switch is in the <head> of index.html and fx.js drives the rest).
    Everything moves with transform and opacity.
    ===================================================================== */
-.counting{font-variant-numeric:tabular-nums}
 /* looping animations rest while their section is off screen */
 .fx main > section:not(.live) *,.fx main > section:not(.live) *::before,.fx main > section:not(.live) *::after{animation-play-state:paused}
 

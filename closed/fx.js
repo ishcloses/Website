@@ -71,20 +71,28 @@
 
     /* ---------- numbers count up when they come into view ---------- */
     $$('.final-spots [data-bind="spots"], .left [data-bind="spotsLeft"]').forEach(function (el) { if (/^\d+$/.test(el.textContent)) el.setAttribute('data-count', el.textContent); });
+    /* data-count is what it counts to ("2.00" spins through the decimals); data-end, if set, is what it shows once it lands ("2") */
     var countUp = function (el) {
       var end = parseFloat(el.getAttribute('data-count')), dec = (el.getAttribute('data-count').split('.')[1] || '').length, t0 = 0;
       var step = function (now) {
         if (!t0) t0 = now;
-        var p = clamp((now - t0) / 1500, 0, 1);
-        el.textContent = (end * (1 - Math.pow(1 - p, 4))).toFixed(dec);
-        if (p < 1) requestAnimationFrame(step); else { el.classList.remove('counting'); el.style.width = ''; el.style.display = ''; }
+        var p = clamp((now - t0) / 1300, 0, 1);
+        el.textContent = (end * (1 - Math.pow(1 - p, 3))).toFixed(dec);
+        if (p < 1) return requestAnimationFrame(step);
+        // land on the final text; if that's narrower ("2.00" to "2"), the gap closes smoothly instead of snapping
+        var was = el.getBoundingClientRect().width;
+        el.textContent = el.getAttribute('data-end') || end.toFixed(dec); el.style.width = '';
+        var now2 = el.getBoundingClientRect().width, done = function () { el.style.display = ''; };
+        if (el.animate && Math.abs(was - now2) > 2) el.animate({ width: [was + 'px', now2 + 'px'] }, { duration: 320, easing: 'cubic-bezier(.3,.7,.2,1)' }).onfinish = done; else done();
       };
       requestAnimationFrame(step);
     };
-    var hold = function (el) {   // even-width digits in a fixed box while it counts, so nothing around the number moves
-      var dec = (el.getAttribute('data-count').split('.')[1] || '').length;
-      el.classList.add('counting');
-      if (!el.closest('.hundo-n')) { el.style.width = el.getBoundingClientRect().width.toFixed(2) + 'px'; el.style.display = 'inline-block'; }
+    var hold = function (el) {   // a box as wide as the widest number it will show, so nothing around it moves while it counts
+      var end = parseFloat(el.getAttribute('data-count')), dec = (el.getAttribute('data-count').split('.')[1] || '').length, w = 0;
+      if (!el.closest('.hundo-n')) {
+        [0, end * .44, end * .9, end].forEach(function (n) { el.textContent = n.toFixed(dec); w = Math.max(w, el.getBoundingClientRect().width); });
+        el.style.width = (w + .5).toFixed(2) + 'px'; el.style.display = 'inline-block';
+      }
       el.textContent = (0).toFixed(dec);
     };
     var countIO = new IntersectionObserver(function (es) {
