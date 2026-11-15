@@ -1,0 +1,90 @@
+/* ==========================================================================
+   scalD rebrand preview: the new display font, the glossy finish and the moving background.
+   Loaded after site.css, so everything here sits on top of the recolored site.
+   ========================================================================== */
+
+/* ---------- display font: Fraunces, heavy with soft corners (the closest free match to Callen) ----------
+   If a licensed Callen file is added later, put it first in --serif.
+   It is much wider than the condensed serif it replaces, so every headline is set smaller to fit the same space. */
+:root{--serif:"Fraunces","Cooper Black",Georgia,serif}
+.hero-h1,.scene-line,.sec-head h2,.stat-n,.fs-l,.why h2,.pent h3,.finale h2,.ab-hero h1,.wm,.tw-l{font-weight:800;letter-spacing:-.014em}
+.pc h3,.fs-body h3,.whys h3,.pent-res,.q-t,.lg-closed,.ab-name,.pc-n,.why-n{font-weight:650;letter-spacing:-.006em}
+.hero-h1,.scene-line,.sec-head h2,.stat-n,.fs-body h3,.fs-l,.pc h3,.whys h3,.why h2,.pent h3,.pent-res,.q-t,.finale h2,.lg-closed,
+.ab-hero h1,.wm{-webkit-text-stroke:0}
+.wm{font-size:1.72rem;line-height:.9}
+.wm-d{width:.6em;height:.74em;margin-left:.07em}
+.foot .wm{font-size:clamp(2.5rem,5.2vw,4rem)}
+.hero-h1{font-size:clamp(1.75rem,min(3.5vw,6vh),4rem);line-height:1.1}
+.scene-line{font-size:clamp(1.8rem,min(3.6vw,6vh),3.6rem);line-height:1.12}
+.sec-head h2{font-size:clamp(2.05rem,4.3vw,4rem);line-height:1.08}
+.pc-n{font-size:1.05rem}
+.pc h3{font-size:clamp(1.3rem,1.7vw,1.6rem);line-height:1.22}
+.tw-l{font-size:calc(2rem * var(--u))}
+.fs-l{font-size:clamp(2.9rem,4.8vw,4.6rem);line-height:.92}
+.fs-body h3{font-size:clamp(1.5rem,2.2vw,2rem);line-height:1.14}
+.why h2{font-size:clamp(2.05rem,4vw,3.9rem);line-height:1.08}
+.why-n{font-size:1rem}
+.whys h3{font-size:clamp(1.2rem,1.6vw,1.45rem);line-height:1.22}
+.stat-n{font-size:clamp(2.2rem,3.9vw,3.8rem);line-height:1.02}
+.pent h3{font-size:clamp(1.75rem,2.9vw,2.6rem);line-height:1.14}
+.pent-res{font-size:clamp(1.3rem,1.9vw,1.75rem);line-height:1.18}
+.lg-closed{font-size:.9rem}
+.q-t{font-size:clamp(1.12rem,1.6vw,1.42rem);line-height:1.28}
+.finale h2{font-size:clamp(2.3rem,5.7vw,6rem);line-height:1.06}
+.ab-hero h1{font-size:clamp(2.6rem,5.4vw,4.4rem);line-height:1.06}
+.ab-name{font-size:1.12rem}
+@media (max-width:760px){
+  .hero-h1{font-size:clamp(1.6rem,6.8vw,2.15rem)}
+  .scene-line{font-size:clamp(1.5rem,6.4vw,2rem)}
+  .fs-l{font-size:2.5rem}
+}
+@media (max-width:760px) and (max-height:700px){.hero-h1{font-size:clamp(1.45rem,6.2vw,1.8rem)}}
+
+/* ---------- glossy finish ---------- */
+/* the pink buttons: a lacquered pill with a bright band of light across the top half */
+.btn-gold{background:linear-gradient(180deg,rgba(255,255,255,.62) 0%,rgba(255,255,255,.2) 44%,rgba(255,255,255,0) 50%),linear-gradient(180deg,#F1A3B7 0%,#DA7B93 52%,#B4526F 100%)}
+/* the pink words in the headlines catch the light the same way */
+.hl-gold{background:linear-gradient(180deg,#FBD0DA 0%,#E48BA1 46%,#C8627F 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+/* cards become dark glass: a diagonal sheen, a lit top edge, and the vines show through softly */
+.pc,.pent{border-color:rgba(255,255,255,.17);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),inset 0 -1px 0 rgba(0,0,0,.28),0 28px 60px -28px rgba(8,18,24,.7)}
+.pc{background:linear-gradient(135deg,rgba(255,255,255,.15) 0%,rgba(255,255,255,.04) 32%,rgba(255,255,255,0) 56%),linear-gradient(180deg,rgba(28,51,52,.8),rgba(28,51,52,.62))}
+.pent{background:linear-gradient(135deg,rgba(255,255,255,.14) 0%,rgba(255,255,255,.035) 30%,rgba(255,255,255,0) 54%),radial-gradient(ellipse 60% 120% at 0% 0%,rgba(55,110,111,.5),transparent 70%),linear-gradient(180deg,rgba(28,51,52,.84),rgba(28,51,52,.66));border-color:rgba(218,123,147,.5)}
+.why-photo,.ab-photo{box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 28px 60px -28px rgba(8,18,24,.7)}
+.nav.is-solid{background-color:rgba(47,68,84,.66);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 1px 0 var(--line)}
+@media (min-width:761px){
+  .pc,.pent{-webkit-backdrop-filter:blur(16px) saturate(150%);backdrop-filter:blur(16px) saturate(150%)}
+  .nav.is-solid{-webkit-backdrop-filter:blur(18px) saturate(150%);backdrop-filter:blur(18px) saturate(150%)}
+}
+
+/* ---------- the moving background: two layers that hold the vines ----------
+   One follows the screen as you scroll the page. The other sits in the hero's room, around the window. */
+.after{background:none}
+.after::after{content:"";position:absolute;inset:0;z-index:-2;background:var(--night)}
+.vines{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.vines-page{position:sticky;top:0;z-index:-1;height:100vh;height:100svh;margin-bottom:-100vh;margin-bottom:-100svh}
+.vines-fixed{position:fixed;inset:0;height:auto;margin:0}   /* pages without the scroll scene (About) */
+
+/* the logo row: fade the edges with a mask instead of painted boxes, so the background shows through */
+.roll-mask::before,.roll-mask::after{display:none}
+.roll-mask{-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+
+/* ---------- vines: they grow in along the edges, curl like pen flourishes, then sway (drawn by rebrand.js) ---------- */
+.vines svg{display:block;width:100%;height:100%;overflow:visible}
+.vine{animation:vine-sway 10s ease-in-out infinite alternate}
+.v-stem,.v-curl,.v-shine{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.v-stem,.v-curl{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1.3s linear}
+.grown .v-stem,.grown .v-curl{stroke-dashoffset:0}
+.v-shine{stroke-dasharray:.07 3;stroke-dashoffset:.07;opacity:.8}   /* a glint of light that runs up the stem, once it has grown */
+.grown .v-shine{animation:vine-shine 9s linear infinite}
+.vines svg.instant .v-shine{animation-delay:0s!important}
+.v-leaf{transform:scale(0);transition:transform .9s cubic-bezier(.2,1.4,.4,1)}
+.v-berry{transform:scale(0);transition:transform .6s cubic-bezier(.2,1.6,.4,1)}
+.grown .v-leaf,.grown .v-berry{transform:scale(1)}
+.v-flut{animation:leaf-flutter 5s ease-in-out infinite alternate}
+.vines svg.instant *{transition:none!important}
+@keyframes vine-sway{from{transform:rotate(-.7deg)}to{transform:rotate(.7deg)}}
+@keyframes leaf-flutter{from{transform:rotate(-6deg)}to{transform:rotate(6deg)}}
+@keyframes vine-shine{0%{stroke-dashoffset:.07}60%,100%{stroke-dashoffset:-1}}
+@media (max-width:760px){.vines{opacity:.6}}
+@media (prefers-reduced-motion:reduce){.vine,.v-flut{animation:none}.v-shine{display:none}}
