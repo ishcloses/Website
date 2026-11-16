@@ -505,6 +505,29 @@ h1,h2,.h3-disp,.enemy-end,.rung h3,.std-h,.deal-side h3,.foot-tag,.qz-q,.agent-p
 .btn-ghost{background:transparent}
 .fx .btn-glow::before{background:linear-gradient(180deg,rgba(255,255,255,.9) 0%,rgba(255,255,255,.34) 44%,rgba(255,255,255,0) 50%),var(--gold-grad)}
 
+/* description text: Sora, a wide geometric sans (the closest free match to NORD). Light for reading, heavier for labels and buttons.
+   If a licensed NORD file is added later, put it first in --sans. */
+:root{--sans:"Sora",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;--ui:var(--sans)}
+body{font-weight:300;font-size:16px;line-height:1.7;letter-spacing:.003em}
+.cd-u i,.board-u i,.qz-count,.bar-t,.proof span,.rung-days,.wc-who,.wall-pp{font-family:var(--ui)}
+.eyebrow{font-weight:500;letter-spacing:.12em;font-size:12px}
+.agent-copy p:not(.eyebrow),.hero-sub,.nf p:not(.eyebrow){font-size:16.5px;line-height:1.75}
+.agent-copy .agent-me,.qz-opt,.qa summary,.std h4,.g-t,.left,.final-spots,.hundo-l{font-weight:500}
+.btn{font-weight:600;letter-spacing:.005em}
+
+/* the underline under "we're your agent.": a hand-drawn chrome stroke that draws in after the words, then a glint runs along it */
+.hero h1 .gold{position:relative;display:block;width:fit-content;margin:.06em auto 0;padding-bottom:.2em}
+.swash{position:absolute;left:-3%;bottom:-.14em;width:106%;height:.34em;overflow:visible;pointer-events:none}
+.swash path{fill:none;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:0}
+.swash-a{stroke:url(#swash-g);stroke-width:3.2}
+.swash-b{stroke:url(#swash-g);stroke-width:1.5;opacity:.65}
+.swash-glint{stroke:#FFFFFF;stroke-width:3.2;stroke-dasharray:.06 2;stroke-dashoffset:.06;opacity:0;filter:drop-shadow(0 0 5px rgba(255,255,255,.9))}
+.fx .swash-a{stroke-dashoffset:1;animation:swash-draw 1.15s cubic-bezier(.65,0,.25,1) 1.05s forwards}
+.fx .swash-b{stroke-dashoffset:1;animation:swash-draw .9s cubic-bezier(.65,0,.25,1) 1.75s forwards}
+.fx .swash-glint{animation:swash-glint 6.5s ease-in-out 3s infinite}
+@keyframes swash-draw{to{stroke-dashoffset:0}}
+@keyframes swash-glint{0%{stroke-dashoffset:.06;opacity:0}6%{opacity:1}40%{stroke-dashoffset:-1;opacity:1}46%,100%{stroke-dashoffset:-1;opacity:0}}
+
 /* dandelion seeds on the wind, behind the page (drawn by fx.js) */
 .seeds{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;color:#DCE5EE}
 .seed{position:absolute;left:var(--x);top:var(--y);width:var(--s);opacity:0;will-change:transform,opacity;animation:seed-drift var(--t) linear var(--d) infinite}
