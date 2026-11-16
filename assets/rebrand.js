@@ -1,105 +1,78 @@
-/* scalD rebrand preview: vines that grow in along the edges, curl like pen flourishes, then sway. Decoration only.
-   Each vine is drawn from a few numbers (where it starts, which way it grows, how long), so it fits any screen size. */
+/* scalD rebrand: dandelion seeds drifting on the wind, and the dandelion in the hero that lets them go. Decoration only.
+   Everything is drawn from a few numbers, so it fits any screen size. The motion itself is CSS (transform and opacity). */
 (function () {
   'use strict';
-  var NS = 'http://www.w3.org/2000/svg', doc = document;
-  var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var TEAL = { id: 'teal', stem: '#4F9392', lite: '#BFE6E2', a: '#9AD6D0', b: '#2C6061', berry: '#E48BA1' };
-  var PINK = { id: 'pink', stem: '#C86882', lite: '#FFE1E8', a: '#FCCBD6', b: '#A14A66', berry: '#8CCBC6' };
-  var clamp = function (n, a, b) { return Math.min(b, Math.max(a, n)); };
+  var doc = document;
   var rng = function (seed) { return function () { seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; }; };
   var f = function (n) { return n.toFixed(1); };
-  var el = function (tag, attrs, parent) { var e = doc.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; };
-  var smooth = function (p) {   // a smooth line through the points
-    var d = 'M' + f(p[0][0]) + ' ' + f(p[0][1]);
-    for (var i = 1; i < p.length - 1; i++) d += 'Q' + f(p[i][0]) + ' ' + f(p[i][1]) + ' ' + f((p[i][0] + p[i + 1][0]) / 2) + ' ' + f((p[i][1] + p[i + 1][1]) / 2);
-    return d + 'L' + f(p[p.length - 1][0]) + ' ' + f(p[p.length - 1][1]);
-  };
+  var clamp = function (n, a, b) { return Math.min(b, Math.max(a, n)); };
+  var rad = Math.PI / 180;
 
-  /* one vine: a meandering stem with leaves on alternating sides, and now and then a curl with a berry at its tip */
-  function vine(svg, o) {
-    var r = rng(o.seed), c = o.hue, s = o.scale, n = Math.max(8, Math.round(o.len / 10)), pts = [], ang = [];
-    var dx = Math.cos(o.dir), dy = Math.sin(o.dir), nx = -dy, ny = dx, p1 = r() * 6.28, p2 = r() * 6.28;
-    for (var i = 0; i <= n; i++) {
-      var t = i * 10, ease = Math.min(1, t / 120), off = (o.wave * Math.sin(t / (150 * s) + p1) + o.wave * .45 * Math.sin(t / (61 * s) + p2)) * ease;
-      pts.push([o.x + dx * t + nx * off, o.y + dy * t + ny * off]);
+  /* one seed: a fan of fine bristles on a thin stalk, with the seed itself hanging underneath */
+  function seedSVG(r) {
+    var d = '', dots = '';
+    for (var i = 0; i < 15; i++) {
+      var a = (-170 + i * (160 / 14) + (r() - .5) * 7) * rad, L = 34 + r() * 12, x = 50 + L * Math.cos(a), y = 56 + L * Math.sin(a);
+      d += 'M50 56Q' + f(50 + L * .5 * Math.cos(a) + (r() - .5) * 5) + ' ' + f(56 + L * .5 * Math.sin(a) - 4) + ' ' + f(x) + ' ' + f(y);
+      dots += '<circle cx="' + f(x) + '" cy="' + f(y) + '" r="1.2"/>';
     }
-    for (i = 0; i <= n; i++) { var a = pts[Math.max(0, i - 1)], b = pts[Math.min(n, i + 1)]; ang.push(Math.atan2(b[1] - a[1], b[0] - a[0])); }
-    var secs = 2.4 + o.len / 420, g = el('g', { 'class': 'vine' }, svg), d = smooth(pts);
-    g.style.transformOrigin = f(o.x) + 'px ' + f(o.y) + 'px';
-    g.style.animationDuration = (8 + r() * 5).toFixed(1) + 's';
-    var stem = el('path', { 'class': 'v-stem', d: d, pathLength: 1, stroke: c.stem, 'stroke-width': f(2.6 * s) }, g);
-    stem.style.transitionDuration = secs.toFixed(2) + 's';
-    var shine = el('path', { 'class': 'v-shine', d: d, pathLength: 1, stroke: c.lite, 'stroke-width': f(1.5 * s) }, g);
-    shine.style.animationDuration = (7 + r() * 4).toFixed(1) + 's'; shine.style.animationDelay = (secs + r() * 3).toFixed(1) + 's';   // counted from when it starts growing
-    var side = r() < .5 ? 1 : -1, nextLeaf = 3 + (r() * 3 | 0), nextCurl = 7 + (r() * 5 | 0);
-    for (i = 2; i < n - 1; i++) {
-      var when = (i / n * secs).toFixed(2) + 's', taper = 1 - .45 * i / n;
-      if (i === nextCurl) {
-        nextCurl += 11 + (r() * 7 | 0); nextLeaf = i + 2;
-        var cp = [pts[i].slice()], h = ang[i] + side * 1.05, k0 = 1 / (30 * s * taper), x = pts[i][0], y = pts[i][1];
-        for (var j = 1; j <= 44; j++) { var q = j / 44; h += side * k0 * (1 + 7 * q * q) * 3.4 * s; x += Math.cos(h) * 3.4 * s; y += Math.sin(h) * 3.4 * s; cp.push([x, y]); }
-        var curl = el('path', { 'class': 'v-curl', d: smooth(cp), pathLength: 1, stroke: c.stem, 'stroke-width': f(1.8 * s * taper) }, g);
-        curl.style.transitionDelay = when;
-        var berry = el('circle', { 'class': 'v-berry', cx: f(x), cy: f(y), r: f(3.6 * s * taper), fill: c.berry }, g);
-        berry.style.transformOrigin = f(x) + 'px ' + f(y) + 'px'; berry.style.transitionDelay = ((i / n) * secs + 1.1).toFixed(2) + 's';
-        side = -side;
-      } else if (i >= nextLeaf) {
-        nextLeaf = i + 3 + (r() * 3 | 0);
-        var L = (17 + r() * 13) * s * taper, rot = (ang[i] + side * (.75 + r() * .4)) * 180 / Math.PI;
-        var hold = el('g', { transform: 'translate(' + f(pts[i][0]) + ' ' + f(pts[i][1]) + ') rotate(' + f(rot) + ')' }, g);
-        var flut = el('g', { 'class': 'v-flut' }, hold);
-        flut.style.animationDuration = (3.6 + r() * 3).toFixed(1) + 's'; flut.style.animationDelay = (-r() * 4).toFixed(1) + 's';
-        var blade = el('g', { 'class': 'v-leaf' }, flut); blade.style.transitionDelay = when;
-        el('path', { d: 'M0 0C' + f(.25 * L) + ' ' + f(-.42 * L) + ' ' + f(.72 * L) + ' ' + f(-.34 * L) + ' ' + f(L) + ' 0C' + f(.72 * L) + ' ' + f(.34 * L) + ' ' + f(.25 * L) + ' ' + f(.42 * L) + ' 0 0Z', fill: 'url(#vg-' + c.id + ')' }, blade);
-        el('path', { d: 'M0 0L' + f(L * .9) + ' 0', stroke: c.lite, 'stroke-width': f(.9 * s), 'stroke-opacity': .55, fill: 'none' }, blade);
-        side = -side;
-      }
-    }
+    return '<svg viewBox="0 0 100 146" aria-hidden="true"><path d="' + d + 'M50 56L50 128" stroke-width=".75" vector-effect="non-scaling-stroke"/>' +
+      '<g fill="currentColor" stroke="none">' + dots + '<ellipse cx="50" cy="134" rx="2.5" ry="7.5"/></g></svg>';
   }
 
-  /* where the vines go: "page" hugs the two sides of the screen, "room" frames the hero without crossing the words or the window */
-  function plan(kind, W, H) {
-    // the empty margin beside the text: the page padding, plus whatever is left over once the 1240px column is centred
-    var pad = clamp(W * .04, 20, 56), margin = pad + Math.max(0, (W - 1240 - pad * 2) / 2), phone = W < 760;
-    var edge = Math.min(62, margin * .5), wave = Math.min(34, edge * .5), s = phone ? .5 : clamp(margin / 150, .58, 1.1);
-    if (kind === 'page') return [
-      { x: edge, y: H + 24, dir: -Math.PI / 2, len: H * 1.04, wave: wave, hue: TEAL, seed: 11, scale: s },
-      { x: W - edge, y: -24, dir: Math.PI / 2, len: H * 1.04, wave: wave, hue: PINK, seed: 29, scale: s },
-      { x: edge + wave * 1.4, y: -24, dir: Math.PI / 2, len: H * .3, wave: wave * .6, hue: PINK, seed: 47, scale: s * .8 },
-      { x: W - edge - wave * 1.4, y: H + 24, dir: -Math.PI / 2, len: H * .36, wave: wave * .6, hue: TEAL, seed: 83, scale: s * .8 }
-    ];
-    if (phone) return [
-      { x: 9, y: H * .62, dir: -Math.PI / 2, len: H * .5, wave: 4, hue: TEAL, seed: 5, scale: .5 },
-      { x: W - 9, y: -20, dir: Math.PI / 2, len: H * .56, wave: 4, hue: PINK, seed: 17, scale: .5 }
-    ];
-    var rs = clamp(W / 1440, .62, 1.1);   // the room has its own space: under the headline and to the right of the window
-    return [
-      { x: -24, y: H - clamp(H * .075, 44, 74), dir: 0, len: W * .4, wave: clamp(H * .028, 12, 26), hue: TEAL, seed: 7, scale: rs },
-      { x: W - clamp(W * .05, 30, 78), y: -24, dir: Math.PI / 2, len: H * .78, wave: clamp(W * .022, 7, 34), hue: PINK, seed: 19, scale: rs },
-      { x: clamp(W * .019, 12, 30), y: -24, dir: Math.PI / 2, len: H * .2, wave: 6, hue: PINK, seed: 61, scale: rs * .75 }
-    ];
+  /* the dandelion head: a ball of the same seeds on a long stem, with a gap on the windward side where some have already left */
+  function puffSVG(R, tall, r) {
+    var c = R + 12, d = '', dots = '';
+    for (var i = 0; i < 58; i++) {
+      var deg = i * (360 / 58) + (r() - .5) * 7, gone = deg > 285 && deg < 345 && r() < .7;
+      if (gone) continue;
+      var a = deg * rad, L = R * (.76 + r() * .24), x = c + L * Math.cos(a), y = c + L * Math.sin(a);
+      d += 'M' + f(c + R * .1 * Math.cos(a)) + ' ' + f(c + R * .1 * Math.sin(a)) + 'L' + f(x) + ' ' + f(y);
+      for (var k = -2; k <= 2; k++) { var b = a + k * 22 * rad; d += 'M' + f(x) + ' ' + f(y) + 'L' + f(x + R * .17 * Math.cos(b)) + ' ' + f(y + R * .17 * Math.sin(b)); }
+      dots += '<circle cx="' + f(x) + '" cy="' + f(y) + '" r="1"/>';
+    }
+    var w = c * 2;
+    return '<svg viewBox="0 0 ' + f(w) + ' ' + f(tall) + '" aria-hidden="true"><path d="M' + f(c) + ' ' + f(c) + 'Q' + f(c + R * .25) + ' ' + f(c + (tall - c) * .5) + ' ' + f(c - R * .3) + ' ' + f(tall) + '" stroke-width="1.6" vector-effect="non-scaling-stroke" stroke-opacity=".7"/>' +
+      '<path d="' + d + '" stroke-width=".7" vector-effect="non-scaling-stroke"/><g fill="currentColor" stroke="none">' + dots + '<circle cx="' + f(c) + '" cy="' + f(c) + '" r="' + f(R * .09) + '"/></g></svg>';
   }
 
-  function build(box, grow) {
+  function seed(box, r, o) {
+    var el = doc.createElement('span'), t = o.t[0] + r() * (o.t[1] - o.t[0]);
+    el.className = 'seed';
+    el.style.cssText = '--x:' + f(o.x) + 'px;--y:' + f(o.y) + 'px;--s:' + f(o.s) + 'px;--dx:' + f(o.dx) + 'px;--dy:' + f(o.dy) + 'px;--o:' + o.o.toFixed(2) +
+      ';--t:' + t.toFixed(1) + 's;--d:-' + (r() * t).toFixed(1) + 's;--w:' + (3.4 + r() * 3.4).toFixed(1) + 's';
+    el.innerHTML = '<span class="seed-sway">' + seedSVG(r) + '</span>';
+    box.appendChild(el);
+  }
+
+  function build(box) {
     var W = box.clientWidth, H = box.clientHeight; if (!W || !H) return;
+    var kind = box.getAttribute('data-seeds'), phone = W < 760, r = rng(kind === 'room' ? 41 : 97), i;
     box.innerHTML = '';
-    var svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, width: W, height: H, 'aria-hidden': 'true' }, box), defs = el('defs', {}, svg);
-    [TEAL, PINK].forEach(function (c) {
-      var lg = el('linearGradient', { id: 'vg-' + c.id, x1: 0, y1: 0, x2: 0, y2: 1 }, defs);
-      el('stop', { offset: 0, 'stop-color': c.lite }, lg); el('stop', { offset: .4, 'stop-color': c.a }, lg); el('stop', { offset: 1, 'stop-color': c.b }, lg);
-    });
-    plan(box.getAttribute('data-vines'), W, H).forEach(function (o) { vine(svg, o); });
-    if (!grow || reduced) { svg.classList.add('instant', 'grown'); return; }
-    var start = function () { requestAnimationFrame(function () { requestAnimationFrame(function () { svg.classList.add('grown'); }); }); };
-    if (!('IntersectionObserver' in window)) return start();
-    new IntersectionObserver(function (es, io) { if (es[0].isIntersecting) { io.disconnect(); start(); } }, { threshold: .05 }).observe(box);
+    if (kind === 'room') {
+      /* the dandelion stands in the gap between the headline and the window, and its seeds blow up and to the right */
+      var R = clamp(H * .085, 46, 82), hx = phone ? -999 : W * .485, hy = H * .78;
+      if (!phone) {
+        var puff = doc.createElement('div'), top = hy - R - 12, tall = H - top + 24;
+        puff.className = 'puff'; puff.style.cssText = 'left:' + f(hx - R - 12) + 'px;top:' + f(top) + 'px;width:' + f(R * 2 + 24) + 'px';
+        puff.innerHTML = puffSVG(R, tall, r); box.appendChild(puff);
+      }
+      for (i = 0; i < (phone ? 5 : 10); i++) {
+        var off = phone || i > 6;   // most leave from the dandelion, a few are already on the air
+        seed(box, r, { x: off ? -40 + r() * W * .5 : hx + (r() - .2) * R * 1.3, y: off ? H * (.45 + r() * .55) : hy - R * (.4 + r() * .9), s: (phone ? 15 : 22) + r() * (phone ? 14 : 30),
+          dx: W * (.3 + r() * .5), dy: -H * (.3 + r() * .55), o: .35 + r() * .5, t: [15, 30] });
+      }
+      return;
+    }
+    for (i = 0; i < (phone ? 6 : 12); i++) {
+      seed(box, r, { x: -60 + r() * W * .7, y: H * (.3 + r() * .8), s: (phone ? 13 : 16) + r() * (phone ? 15 : 32), dx: W * (.45 + r() * .65), dy: -H * (.25 + r() * .55), o: .2 + r() * .38, t: [22, 46] });
+    }
   }
 
-  var boxes = [].slice.call(doc.querySelectorAll('[data-vines]')), sizes = [], timer;
-  boxes.forEach(function (b, i) { sizes[i] = b.clientWidth + 'x' + b.clientHeight; build(b, true); });
+  var boxes = [].slice.call(doc.querySelectorAll('[data-seeds]')), sizes = [], timer;
+  boxes.forEach(function (b, i) { sizes[i] = b.clientWidth + 'x' + b.clientHeight; build(b); });
   addEventListener('resize', function () {
     clearTimeout(timer);
-    timer = setTimeout(function () { boxes.forEach(function (b, i) { var now = b.clientWidth + 'x' + b.clientHeight; if (now !== sizes[i]) { sizes[i] = now; build(b, false); } }); }, 220);
+    timer = setTimeout(function () { boxes.forEach(function (b, i) { var now = b.clientWidth + 'x' + b.clientHeight; if (now !== sizes[i]) { sizes[i] = now; build(b); } }); }, 220);
   });
 })();

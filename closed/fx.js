@@ -133,7 +133,32 @@
     };
     if (rail) { jobs.push(ladder); wide.addEventListener && wide.addEventListener('change', onScroll); }
 
-    /* ---------- gold shimmer: a bright copy of the words sits on top and a soft band of it sweeps across ----------
+    /* ---------- dandelion seeds drifting behind the page: a fan of fine bristles on a stalk, carried up and across by the wind ---------- */
+    var rnd = (function (seed) { return function () { seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; }; })(97);
+    var seedSVG = function () {
+      var d = '', dots = '', f1 = function (n) { return n.toFixed(1); };
+      for (var i = 0; i < 15; i++) {
+        var a = (-170 + i * (160 / 14) + (rnd() - .5) * 7) * Math.PI / 180, L = 34 + rnd() * 12, x = 50 + L * Math.cos(a), y = 56 + L * Math.sin(a);
+        d += 'M50 56Q' + f1(50 + L * .5 * Math.cos(a) + (rnd() - .5) * 5) + ' ' + f1(56 + L * .5 * Math.sin(a) - 4) + ' ' + f1(x) + ' ' + f1(y);
+        dots += '<circle cx="' + f1(x) + '" cy="' + f1(y) + '" r="1.2"/>';
+      }
+      return '<svg viewBox="0 0 100 146" aria-hidden="true"><path d="' + d + 'M50 56L50 128" stroke-width=".75" vector-effect="non-scaling-stroke"/>' +
+        '<g fill="currentColor" stroke="none">' + dots + '<ellipse cx="50" cy="134" rx="2.5" ry="7.5"/></g></svg>';
+    };
+    var sky = doc.createElement('div'), sw = window.innerWidth, sh = vh(), small = sw < 760;
+    sky.className = 'seeds'; sky.setAttribute('aria-hidden', 'true');
+    for (var si = 0; si < (small ? 7 : 13); si++) {
+      var sd = doc.createElement('span'), dur = 22 + rnd() * 24;
+      sd.className = 'seed';
+      sd.style.cssText = '--x:' + (-60 + rnd() * sw * .7).toFixed(0) + 'px;--y:' + (sh * (.3 + rnd() * .8)).toFixed(0) + 'px;--s:' + ((small ? 13 : 16) + rnd() * (small ? 15 : 32)).toFixed(0) +
+        'px;--dx:' + (sw * (.45 + rnd() * .65)).toFixed(0) + 'px;--dy:-' + (sh * (.25 + rnd() * .55)).toFixed(0) + 'px;--o:' + (.22 + rnd() * .4).toFixed(2) +
+        ';--t:' + dur.toFixed(1) + 's;--d:-' + (rnd() * dur).toFixed(1) + 's;--w:' + (3.4 + rnd() * 3.4).toFixed(1) + 's';
+      sd.innerHTML = '<span class="seed-sway">' + seedSVG() + '</span>';
+      sky.appendChild(sd);
+    }
+    doc.body.insertBefore(sky, doc.body.firstChild);
+
+    /* ---------- shimmer: a bright copy of the accent words sits on top and a soft band of it sweeps across ----------
        The band slides one way and the copy slides back the other, so the letters stay put and only the light moves. */
     var shimmer = function (host) {   // the copy is drawn by CSS from data-t, so the words are never in the page twice
       var layer = doc.createElement('span');
