@@ -1,6 +1,6 @@
 /* Closed: landing page, application quiz and booking step.
    Everything you'll want to change lives in SPOTS_LEFT and CONFIG right below. */
-var SPOTS_LEFT = 9;   // spots still open. Shown as "9 spots left" above the last button. Change it by hand as people join.
+var SPOTS_LEFT = 9;   // spots still open. Shown as "9 of 15 spots open" above the last button. Change it by hand as people join.
 var CONFIG = {
   cohort: {
     start: '2026-12-07T00:00:00-06:00',   // Monday, Dec 7, 12:00 AM Central (Dallas). The countdown runs to this.
@@ -163,20 +163,19 @@ var QUESTIONS = [
   var labels = { cohortLong: C.cohort.long, cohortShort: C.cohort.short, spots: C.cohort.spots, spotsLeft: String(SPOTS_LEFT), doorsClose: C.cohort.doorsClose };
   $$('[data-bind]').forEach(function (el) { var k = el.getAttribute('data-bind'); if (labels[k] != null) el.textContent = labels[k]; });
   function ctaText(t) { $$('[data-cta]').forEach(function (el) { el.textContent = t; }); }
-  ctaText('join the roster');
+  ctaText('Join the roster');
 
   /* ---------- countdown to the cohort, in Central time ---------- */
   var bar = $('#bar'), target = Date.parse(C.cohort.start), cd = {};
   $$('[data-cd]').forEach(function (el) { var k = el.getAttribute('data-cd'); (cd[k] = cd[k] || []).push(el); });
-  var put = function (k, v) { cd[k].forEach(function (el) { el.textContent = v; }); };
+  var put = function (k, v) { (cd[k] || []).forEach(function (el) { el.textContent = v; }); };
   var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
   function tick() {
     var ms = target - Date.now();
     if (!(ms > 0)) {
-      bar.classList.add('done');
-      $('.bar-msg', bar).textContent = 'Draft Day is here. Apply for the next draft.';
+      if (bar) { bar.classList.add('done'); var msg = $('.bar-msg', bar); if (msg) msg.textContent = 'Draft Day is here. Apply for the next draft.'; }
       var board = $('.board'); if (board) board.hidden = true;
-      ctaText('apply for the next draft');
+      ctaText('Apply for the next draft');
       var ft = $('#final-t'); if (ft) ft.textContent = 'The next draft opens soon.';
       return false;
     }
